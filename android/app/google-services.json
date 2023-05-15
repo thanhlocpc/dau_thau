@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "118050787824",
+    "project_id": "dau-thau-f63aa",
+    "storage_bucket": "dau-thau-f63aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118050787824:android:78c1b9edc62f61e8b8cd35",
+        "android_client_info": {
+          "package_name": "com.dau_thau"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118050787824-ho45a38n9sd9medpmoakrosej4r3s736.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGssNzuBZZLOelgKwOsGPQUkhHTe-e3II"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118050787824-ho45a38n9sd9medpmoakrosej4r3s736.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

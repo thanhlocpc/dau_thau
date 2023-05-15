@@ -1,0 +1,29 @@
+export const GET_RECENT_PRODUCTS = 'recent/GET_RECENT_PRODUCTS'
+
+export const GET_RECENT_PRODUCTS_FAIL = 'recent/GET_RECENT_PRODUCTS_FAIL'
+
+export const GET_RECENT_PRODUCTS_SUCCESS = 'recent/GET_RECENT_PRODUCTS_SUCCESS'
+
+export const GET_RECENT_PRODUCTS_START = 'recent/GET_RECENT_PRODUCTS_START'
+
+export const REMOVE_RECENT_PRODUCT = 'recent/REMOVE_RECENT_PRODUCT'
+
+export const ADD_RECENT_PRODUCT = 'recent/ADD_RECENT_PRODUCT'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,25 +1,23 @@
-import { useState } from 'react';
-import { Text, TouchableOpacity, View, TextInput } from 'react-native';
-import * as React from "react";
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View, TextInput, Alert } from 'react-native';
 import WalletConnectProvider from "@walletconnect/react-native-dapp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   useWalletConnect,
   withWalletConnect,
-
 } from "@walletconnect/react-native-dapp";
 
 import Web3 from 'web3';
 
 
 
-const App = () => {
+const TestScreen = () => {
   const [wcUri, setWcUri] = useState(null);
 
 
   const [web3] = useState(new Web3())
-  const [provider] = useState(new Web3.providers.HttpProvider("http://localhost:7545"))
+  const [provider] = useState(new Web3.providers.HttpProvider("https://a13f-171-233-148-143.ngrok-free.app"))
 
   const getAccounts = async () => {
     try {
@@ -43,11 +41,32 @@ const App = () => {
               var iterator = a.values()
               for (let elements of iterator) {
                 web3.eth.getTransactionFromBlock(elements).then(console.log)
-
-
               }
             });
           }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const transaction = async () => {
+    try {
+      await connector.sendTransaction({
+        from: connector.accounts[0],
+        gas: 21000, // add gas to the transaction
+        to: "0xdB1Fa244C416dF5093BBdaC0F23EEb941ca9DAd4",
+        value: web3.utils.toWei("0.01", "ether"),
+        data: "0x",
+
+      }).then((result) => {
+        // Returns transaction id (hash)
+        console.log(result);
+        Alert.alert(result)
+      })
+        .catch((error) => {
+          // Error returned when rejected
+          console.error(error);
         });
     } catch (error) {
       console.log(error);
@@ -67,29 +86,36 @@ const App = () => {
       <TouchableOpacity title="Connect" onPress={async () => await getAccounts()} style={{ padding: 15 }}>
         <Text>Kết nối</Text>
       </TouchableOpacity>
+
+
     </>
   }
   return (
-    <TouchableOpacity onPress={() => connector.killSession()} style={{ padding: 15 }}>
-      {/* <Text>Đã liên kết</Text> */}
-      <Text>{connector.accounts[0]}</Text>
-      {/* <Text>{connector.chainId}</Text>
+    <>
+      <TouchableOpacity onPress={() => connector.killSession()} style={{ padding: 15 }}>
+        {/* <Text>Đã liên kết</Text> */}
+        <Text>{connector.accounts[0]}</Text>
+        {/* <Text>{connector.chainId}</Text>
       <Text>{connector.clientId}</Text> */}
-      <Text>{connector.clientMeta.name}</Text>
+        {/* <Text>{web3.eth.getBalance(connector.accounts[0])}</Text> */}
 
-    </TouchableOpacity>
+        <Text>{connector.clientMeta.name}</Text>
+
+      </TouchableOpacity>
+
+      <TouchableOpacity title="Connect" onPress={async () => await transaction()} style={{ padding: 15 }}>
+        <Text>Chuyển tiền demo</Text>
+      </TouchableOpacity>
+    </>
+
   );
 };
-export default withWalletConnect(App, {
+export default withWalletConnect(TestScreen, {
   redirectUrl:
-    Platform.OS === "web" ? window.location.origin : "http://localhost:7545",
+    Platform.OS === "web" ? window.location.origin : "https://a13f-171-233-148-143.ngrok-free.app",
   storageOptions: {
     asyncStorage: AsyncStorage,
   },
 });
 
-// if (console && console.isOpen) {
-//   console.log("The console is open!");
-// } else {
-//   console.log("The console is closed.");
-// }
+// export default TestScreen;
