@@ -1,5 +1,5 @@
 import React, { useReducer, useState, useEffect, useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -17,8 +17,6 @@ import {
 } from './inputTypes';
 import ErrorModal from './ErrorModal';
 import FormSubmitButton from './FormSubmitButton';
-import { Context as AuthContext } from '../../context/auth/AuthContext';
-
 const priceValidator = text => {
   if (isNaN(text) || parseFloat(text) < 0) {
     return { isValid: false, error: 'Please enter a valid positive price' };
@@ -58,7 +56,7 @@ const reducer = (state, { type, payload }) => {
   }
 };
 
-const ProductForm = ({ submitButtonTitle, product, onSubmit }) => {
+const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
   const initialFormState = {
     title: { value: product?.title, isValid: product ? true : false },
     imageUrl: { value: product?.imageUrl, isValid: product ? true : false },
@@ -76,9 +74,6 @@ const ProductForm = ({ submitButtonTitle, product, onSubmit }) => {
   const [alert, setAlert] = useState(false);
   const navigation = useNavigation();
 
-  const {
-    state: { userId },
-  } = useContext(AuthContext);
 
   useEffect(() => {
     if (
@@ -117,7 +112,7 @@ const ProductForm = ({ submitButtonTitle, product, onSubmit }) => {
       price: product.price,
     }
     : {
-      ownerId: userId,
+      ownerId: "userId",
       title: title.value,
       imageUrl: imageUrl.value,
       description: description.value,
@@ -152,29 +147,104 @@ const ProductForm = ({ submitButtonTitle, product, onSubmit }) => {
     <View style={styles.form}>
       <LabledInput
         borderRadius={5}
-        placeholder="Tên sản phẩm"
+        placeholder="Tên đấu thầu"
         required
         autoCapitalize="sentences"
         value={title.value}
-        label="Tên sản phẩm"
+        label="Tên đấu thầu"
         onChangeText={newTxt => dispatch({ type: SET_TITLE, payload: newTxt })}
         isValid={title.isValid}
         setIsValid={val => dispatch({ type: SET_TITLE_VALIDATION, payload: val })}
       />
       <LabledInput
-        borderRadius={5}
-        placeholder="Link hình ảnh"
+        placeholder="Mô tả"
         required
-        autoCapitalize="none"
-        value={imageUrl.value}
-        label="Link hình ảnh"
-        onChangeText={newTxt => dispatch({ type: SET_IMAGE, payload: newTxt })}
-        isValid={imageUrl.isValid}
-        setIsValid={val => dispatch({ type: SET_IMAGE_VALIDATION, payload: val })}
+        multiline
+        large
+        autoCapitalize="sentences"
+        value={description.value}
+        borderRadius={5}
+        label="Mô tả"
+        onChangeText={newTxt =>
+          dispatch({ type: SET_DESCRIPTION, payload: newTxt })
+        }
+        isValid={description.isValid}
+        setIsValid={val =>
+          dispatch({ type: SET_DESCRIPTION_VALIDATION, payload: val })
+        }
       />
       <LabledInput
+        placeholder="Mô tả"
+        required
+        multiline
+        large
+        autoCapitalize="sentences"
+        value={description.value}
         borderRadius={5}
-        placeholder="Giá bán"
+        label="Mô tả"
+        onChangeText={newTxt =>
+          dispatch({ type: SET_DESCRIPTION, payload: newTxt })
+        }
+        isValid={description.isValid}
+        setIsValid={val =>
+          dispatch({ type: SET_DESCRIPTION_VALIDATION, payload: val })
+        }
+      />
+
+
+      <LabledInput
+        placeholder="Mô tả"
+        required
+        multiline
+        large
+        autoCapitalize="sentences"
+        value={description.value}
+        borderRadius={5}
+        label="Mô tả"
+        onChangeText={newTxt =>
+          dispatch({ type: SET_DESCRIPTION, payload: newTxt })
+        }
+        isValid={description.isValid}
+        setIsValid={val =>
+          dispatch({ type: SET_DESCRIPTION_VALIDATION, payload: val })
+        }
+      />
+
+      <LabledInput
+        dropdown={true}
+        borderRadius={5}
+        placeholder="Loại hình"
+        required
+        value={price.value?.toString()}
+        label="Loại hình"
+        keyboardType="numeric"
+        onChangeText={
+          product?.price
+            ? null
+            : newTxt => dispatch({ type: SET_PRICE, payload: newTxt })
+        }
+        validators={[priceValidator]}
+        isValid={price.isValid}
+        setIsValid={val => dispatch({ type: SET_PRICE_VALIDATION, payload: val })}
+      />
+       <LabledInput
+        dropdown={true}
+        borderRadius={5}
+        placeholder="Trạng thái"
+        required
+        value={price.value?.toString()}
+        label="Trạng thái"
+        onChangeText={
+          product?.price
+            ? null
+            : newTxt => dispatch({ type: SET_PRICE, payload: newTxt })
+        }
+      
+      />
+
+      <LabledInput
+        borderRadius={5}
+        placeholder="Giá khởi điểm"
         required
         value={price.value?.toString()}
         label="Giá"
@@ -188,23 +258,7 @@ const ProductForm = ({ submitButtonTitle, product, onSubmit }) => {
         isValid={price.isValid}
         setIsValid={val => dispatch({ type: SET_PRICE_VALIDATION, payload: val })}
       />
-      <LabledInput
-        placeholder="Mô tả sản phẩm"
-        required
-        multiline
-        large
-        autoCapitalize="sentences"
-        value={description.value}
-        borderRadius={5}
-        label="Mô tả sản phẩm"
-        onChangeText={newTxt =>
-          dispatch({ type: SET_DESCRIPTION, payload: newTxt })
-        }
-        isValid={description.isValid}
-        setIsValid={val =>
-          dispatch({ type: SET_DESCRIPTION_VALIDATION, payload: val })
-        }
-      />
+
       <FormSubmitButton
         // shallowAppearance={!formIsValid}
         disabled={!formIsValid || actionDisabled}
@@ -212,29 +266,27 @@ const ProductForm = ({ submitButtonTitle, product, onSubmit }) => {
         isSubmitting={isSubmitting}
         submitHandler={formSubmitHandler}
       />
-      {/* <ErrorModal
-        isVisible={alert}
-        title="Oops"
-        message="Please check your internet connection"
-        buttonTitle="Try Again"
-        onCancel={() => toggleAlert()}
-        Icon={() => (
-          <Feather
-            name="wifi-off"
-            size={32}
-            color={`rgba(${Colors.primary}, 0.8)`}
-          />
-        )}
-      /> */}
     </View>
   );
 };
 
-export default ProductForm;
+export default CreateBiddingProfileForm;
 
 const styles = StyleSheet.create({
   form: {
     paddingTop: 10,
-    paddingHorizontal: 25,
+  },
+  label: {
+    fontFamily: 'Lato-Bold',
+    fontSize: 16,
+    height: 18,
+    textAlignVertical: 'center',
+    // backgroundColor: `rgb(${Colors.background})`,
+    alignSelf: 'flex-start',
+    // marginStart: 20,
+    // position: 'absolute',
+    // top: -23,
+    paddingHorizontal: 0,
+    color: 'black',
   },
 });

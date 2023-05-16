@@ -31,7 +31,7 @@ const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
 const CartIcons = () => <Icon name="cart-o" color="white" size={16} />;
 import CartIcon from '../components/shop/CartIconComponent';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import firestore from '@react-native-firebase/firestore';
 import { GET_CART } from '../redux/cart/constants';
@@ -42,6 +42,7 @@ const textPrimaryColor = `rgb(${Colors.text.primary})`;
 // const width = Dimensions.get('window').width
 
 import SelectDropdown from 'react-native-select-dropdown'
+import CreateBiddingProfileForm from '../components/shop/CreateBiddingProfileForm';
 const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const CreateBiddingProfileScreen = ({ navigation, auth }) => {
@@ -70,36 +71,21 @@ const CreateBiddingProfileScreen = ({ navigation, auth }) => {
 
   return (
     <SafeAreaView>
-      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss; setShowSearch(false) }} accessible={false}>
-        <View style={styles.container}>
-          <StatusBar barStyle="dark-content" />
-          <View style={{ ...styles.header, }}>
-            <Text style={styles.titleHeader}>Tạo hồ sơ</Text>
-          </View>
-
-          <View style={{ padding: 10 }}>
-
-            <View style={{ backgroundColor: "gray", padding: 5, borderRadius:5, marginBottom:5 }}>
-              <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-                <Text>Tên hồ sơ</Text>
-                <Text>10/10/2022 11:05:30</Text>
-              </View>
-              <Text>Mới tạo</Text>
-            </View>
-
-            <View style={{ backgroundColor: "gray", padding: 5, borderRadius:5, marginBottom:5 }}>
-              <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-                <Text>Tên hồ sơ</Text>
-                <Text>10/10/2022 11:05:30</Text>
-              </View>
-              <Text>Mới tạo</Text>
-            </View>
-
-          </View>
-
-
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <View style={{ ...styles.header, }}>
+          <Text style={styles.titleHeader}>Tạo hồ sơ</Text>
         </View>
-      </TouchableWithoutFeedback>
+
+        <ScrollView>
+        <View style={{ padding: 10 }}>
+          <CreateBiddingProfileForm onSubmit={() => { }} submitButtonTitle="Tạo hồ sơ" />
+        </View>
+        </ScrollView>
+      
+
+
+      </View>
 
     </SafeAreaView>
 

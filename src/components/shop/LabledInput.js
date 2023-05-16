@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {Colors} from '../../constants/Colors';
+import { Colors } from '../../constants/Colors';
 
 const validColor = `rgb(${Colors.accentTwo})`;
 const invalidColor = `rgb(${Colors.danger})`;
@@ -25,6 +27,7 @@ const getColor = (isValid, finishedEditing, focused, defaultColor) => {
 
   return defaultColor;
 };
+const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const LabledInput = ({
   label,
@@ -45,6 +48,7 @@ const LabledInput = ({
   error,
   borderRadius,
   backgroundColor,
+  dropdown
 }) => {
   const [focus, setFocus] = useState(false);
   const [finishedEditing, setFinishedEditing] = useState(false);
@@ -76,7 +80,7 @@ const LabledInput = ({
     if (validators) {
       let foundError = false;
       validators.forEach(validator => {
-        const {isValid, error} = validator(text);
+        const { isValid, error } = validator(text);
         if (!isValid) {
           setIsValid(false);
           setErrorMessage(error);
@@ -134,33 +138,55 @@ const LabledInput = ({
               <Icon color={focus ? primaryColor : labelDefaultColor} />
             </View>
           )}
-          <TextInput
-           selectionColor={'blue'}
-            autoCorrect={false}
-            autoCapitalize={autoCapitalize}
-            multiline={multiline}
-            secureTextEntry={secure}
-            placeholder={placeholder}
-            placeholderTextColor={`rgba(${Colors.text.primary}, 0.5)`}
-            style={{
-              ...styles.input,
-              textAlignVertical: large ? 'top' : 'center',
-              // borderRadius:borderRadius ? borderRadius : 40
+
+          {dropdown ? <SelectDropdown
+            data={countries}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index)
             }}
-            onFocus={() => {
-              setFocus(true);
-              if (isValid) setIsValid(false);
-              setFinishedEditing(false);
+            defaultButtonText={label}
+            buttonStyle={{ height: 55, width: "100%", borderRadius: 5, backgroundColor: 'transparent' }}
+            buttonTextStyle={{ textAlign: "left", width: "100%", fontSize: 14, }}
+            rowTextStyle={{ textAlign: "left", fontSize: 14 }}
+            rowStyle={{ height: 40 }}
+            dropdownIconPosition="right"
+            renderDropdownIcon={() => <FontAwesome name='angle-down' size={20} />}
+
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem
             }}
-            onBlur={() => {
-              validateInput(value);
+            rowTextForSelection={(item, index) => {
+              return item
             }}
-            value={value}
-            keyboardType={keyboardType ? keyboardType : 'default'}
-            onChangeText={(text)=>{onChangeText(text), validateInput(text)}}
-            onChange={() => setErrorMessage('')}
-            onSubmitEditing={() => validateInput(value)}
-          />
+          /> :
+            <TextInput
+              selectionColor={'blue'}
+              autoCorrect={false}
+              autoCapitalize={autoCapitalize}
+              multiline={multiline}
+              secureTextEntry={secure}
+              placeholder={placeholder}
+              placeholderTextColor={`rgba(${Colors.text.primary}, 0.5)`}
+              style={{
+                ...styles.input,
+                textAlignVertical: large ? 'top' : 'center',
+                // borderRadius:borderRadius ? borderRadius : 40
+              }}
+              onFocus={() => {
+                setFocus(true);
+                if (isValid) setIsValid(false);
+                setFinishedEditing(false);
+              }}
+              onBlur={() => {
+                validateInput(value);
+              }}
+              value={value}
+              keyboardType={keyboardType ? keyboardType : 'default'}
+              onChangeText={(text) => { onChangeText(text), validateInput(text) }}
+              onChange={() => setErrorMessage('')}
+              onSubmitEditing={() => validateInput(value)}
+            />}
+
           {isValid && finishedEditing && (
             <AntDesign
               style={styles.icon}
@@ -189,7 +215,7 @@ const LabledInput = ({
 export default LabledInput;
 
 const styles = StyleSheet.create({
-  container: {marginTop: 5},
+  container: { marginTop: 5 },
 
   formControl: {
     borderWidth: 1,
