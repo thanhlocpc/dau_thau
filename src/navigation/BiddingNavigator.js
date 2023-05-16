@@ -2,13 +2,10 @@ import React, { useContext, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import ProductsScreen from '../screens/ProductsScreen';
-import ProductDetailScreen from '../screens/ProductDetailScreen';
-import OrdersScreen from '../screens/OrdersScreen';
 import { Colors } from '../constants/Colors';
-import CartScreen from '../screens/CartScreen';
 // import CartIcon from '../components/shop/CartIconComponent';
-import LeftIcon from '../components/icons/LeftIcon';
+import ProfileScreen from '../screens/ProfileScreen';
+import MyBiddingScreen from '../screens/MyBiddingScreen';
 // import FriesOddIcon from '../components/icons/FriesOddIcon';
 
 const Stack = createStackNavigator();
@@ -26,7 +23,7 @@ const screenOptions = {
   },
 };
 
-const ProductsNavigator = () => {
+const ProfileNavigator = () => {
   // const {clearCart} = useContext(CartContext);
 
   useEffect(() => {
@@ -34,51 +31,19 @@ const ProductsNavigator = () => {
       // clearCart();
     };
   }, []);
+  
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Products"
-        component={ProductsScreen}
-        options={({ navigation }) => ({
-          title: 'Marketplace',
-          headerShown: false,
-        })}
-      />
-      <Stack.Screen
-        name="ProductDetail"
-        component={ProductDetailScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Cart"
-        component={CartScreen}
-        options={({ navigation }) => ({
-          title: 'Giỏ hàng',
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={navigation.goBack}>
-              <LeftIcon
-                height={42}
-                width={42}
-                weight={1.3}
-                color={textPrimaryColor}
-              />
-            </TouchableOpacity>
-          ),
-        })}
-      />
-
-      <Stack.Screen
-        name="order"
-        component={OrdersScreen}
+        name="MyBiddingScreen"
+        component={MyBiddingScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
-export default ProductsNavigator;
+export default ProfileNavigator;
 
 const styles = StyleSheet.create({
   backButton: {

@@ -23,6 +23,8 @@ const Tab = createBottomTabNavigator();
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getUser } from '../redux/auth/action';
 import ProfileNavigator from './ProfileNavigator';
+import MyBiddingScreen from '../screens/MyBiddingScreen';
+import BiddingProfileNavigator from './BiddingProfileNavigator';
 
 const CustomTabBarButton = ({ children, onPress }) => (
   <TouchableOpacity
@@ -101,7 +103,7 @@ const DrawerNavigator = (props) => {
       />
       <Tab.Screen
         name="Order"
-        component={OrdersScreen}
+        component={MyBiddingScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -122,9 +124,9 @@ const DrawerNavigator = (props) => {
           tabBarButton: props => <CustomTabBarButton {...props} />,
         }}
       /> */}
-      {/* <Tab.Screen
-        name="FavoritesNavigator"
-        component={null}
+      <Tab.Screen
+        name="BiddingProfileNavigator"
+        component={BiddingProfileNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -135,7 +137,7 @@ const DrawerNavigator = (props) => {
           ),
           title: 'Favarites',
         }}
-      /> */}
+      />
 
       <Tab.Screen
         name="ProfileNavigator"

@@ -41,13 +41,15 @@ import { LOGOUT } from '../redux/auth/constants';
 const textPrimaryColor = `rgb(${Colors.text.primary})`;
 // const width = Dimensions.get('window').width
 
+import SelectDropdown from 'react-native-select-dropdown'
+const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const ProductsScreen = ({ navigation, auth }) => {
 
   const [isLoading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isShowSearch, setShowSearch] = useState(false);
-  const [data, setData] = useState([])
+  const [data, setData] = useState([1,2,3])
   const [search, setSearch] = useState('')
   const widthScreen = useWindowDimensions().width
   const [width, setWidth] = useState(widthScreen)
@@ -57,42 +59,10 @@ const ProductsScreen = ({ navigation, auth }) => {
   const [limit, setLimit] = useState(100)
 
   const onSearch = () => {
-    setLoading(true)
-    firestore()
-      .collection('products')
-      .get()
-      .then(res => {
-        const temp = []
-        res.forEach(doc => {
-          if (doc.data().title.toUpperCase().indexOf(search.toUpperCase()) > -1) temp.push(doc.data())
-        })
-        setData(temp)
-        setLoading(false)
-      }).catch(err => {
-        setLoading(false)
-        setData([])
-      })
   }
 
   const loadData = async () => {
     setLoading(true);
-    firestore()
-      .collection('products')
-      .limit(limit)
-      .orderBy('createdAt', 'desc')
-      .get()
-      .then(querySnapshot => {
-        const temp = []
-        for (const doc of querySnapshot._docs) {
-          if (doc._data.available == 'true') temp.push(doc._data)
-        }
-        setData(temp)
-        setLoading(false)
-      })
-      .catch(e => {
-        setData([])
-        setLoading(false)
-      });
   };
   const dispatch = useDispatch()
   useEffect(() => {
@@ -137,89 +107,11 @@ const ProductsScreen = ({ navigation, auth }) => {
     );
   }, []);
 
-  if (false) {
-    return (
-      <SafeAreaView>
-        <TouchableWithoutFeedback onPress={() => { setShowSearch(false) }} accessible={false}>
-          <View style={styles.container}>
-            <StatusBar barStyle="dark-content" />
-            <View style={{ ...styles.header, }}>
-              {isShowSearch ?
-                <TextInput autoFocus={true} style={{ ...styles.inputSearch, width: width - 22 * 2 - 26 - 50, }} placeholder='Tìm kiếm' value={search} onChangeText={text => setSearch(text)} onSubmitEditing={onSearch} />
-                : <Text style={styles.titleHeader}>Marketplace</Text>}
-              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-                {isShowSearch ?
-                  null
-                  : <TouchableOpacity onPress={onPressIconSearch} style={{ marginRight: 10 }}>
-                    <FontAwesome name="search" color="black" size={26} />
-                  </TouchableOpacity>}
-
-                <CartIcon
-                  navigation={navigation}
-                  color={textPrimaryColor}
-                  style={styles.cart}
-                />
-              </View>
-            </View>
-            <View style={styles.centered}>
-              <ActivityIndicator size="large" color={primaryColor} />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </SafeAreaView>
-    );
-  }
 
   const onPressIconSearch = () => {
     setShowSearch(true)
   }
-
-  // if (data.length == 0) {
-  //   console.log("fdfd");
-  //   return (
-  //     <SafeAreaView>
-  //       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss; setShowSearch(false) }} accessible={false}>
-  //         <View style={styles.container}>
-  //           <StatusBar barStyle="dark-content" />
-  //           <View style={{ ...styles.header, }}>
-  //             {isShowSearch ?
-  //               <TextInput  returnKeyType='search' autoFocus={true} style={{...styles.inputSearch,width: width - 22 * 2 - 26 - 50,}} placeholder='Tìm kiếm' placeholderTextColor='gray' value={search} onChangeText={text => setSearch(text)} onSubmitEditing={onSearch} />
-  //               : <Text style={styles.titleHeader}>Marketplace</Text>}
-  //             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-
-  //               {isShowSearch ?
-  //                 null
-  //                 : <TouchableOpacity onPress={onPressIconSearch} style={{ marginRight: 10 }}>
-  //                   <FontAwesome name="search" color="black" size={26} />
-  //                 </TouchableOpacity>}
-
-  //               <CartIcon
-  //                 navigation={navigation}
-  //                 color={textPrimaryColor}
-  //                 style={styles.cart}
-  //               />
-  //             </View>
-  //           </View>
-  //           <View style={styles.centered}>
-  //             <MaterialCommunityIcons
-  //               name="emoticon-sad-outline"
-  //               size={26}
-  //               color={`rgba(${Colors.text.secondary}, 0.6)`}
-  //             />
-  //             <Text style={styles.errorMessage}>Không có sản phẩm</Text>
-  //             <TouchableOpacity style={{ width: 60, marginTop: 15 }} onPress={loadData}>
-  //               <Text style={{ color: `rgba(${Colors.text.secondary}, 0.6)`, textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Tải lại</Text>
-  //             </TouchableOpacity>
-  //           </View>
-  //         </View>
-  //       </TouchableWithoutFeedback>
-
-  //     </SafeAreaView>
-  //   );
-  // }
-
-
 
   return (
     <SafeAreaView>
@@ -229,7 +121,7 @@ const ProductsScreen = ({ navigation, auth }) => {
           <View style={{ ...styles.header, }}>
             {isShowSearch ?
               <TextInput returnKeyType='search' autoFocus={true} style={{ ...styles.inputSearch, width: width - 22 * 2 - 26 - 50, }} placeholder='Tìm kiếm' placeholderTextColor='gray' value={search} onChangeText={text => setSearch(text)} onSubmitEditing={onSearch} />
-              : <Text style={styles.titleHeader}>Danh sách đấu thầu</Text>}
+              : <Text style={styles.titleHeader}>Đấu thầu</Text>}
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
               {isShowSearch ?
@@ -238,22 +130,38 @@ const ProductsScreen = ({ navigation, auth }) => {
                   <FontAwesome name="search" color="black" size={26} />
                 </TouchableOpacity>}
 
-              {/* <CartIcon
-                navigation={navigation}
-                color={textPrimaryColor}
-                style={styles.cart}
-              /> */}
             </View>
+
           </View>
-          <ProductItem
-            product={undefined}
-            navigationRoute="ProductDetail"
-            ActionIcon={CartIcons}
-            actionTitle="Thêm vào giỏ hàng"
-          />
+          <View style={{ padding: 10, justifyContent:"flex-end", flexDirection:'row' }}>
+            <SelectDropdown
+              data={countries}
+              onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index)
+              }}
+              defaultButtonText="Loại hình"
+              buttonStyle={{height:30, width:"40%", backgroundColor: `rgb(${Colors.background2})`, borderRadius:5}}
+              buttonTextStyle={{ textAlign: "left", width: "100%", fontSize:14, }}
+              rowTextStyle={{textAlign:"left", fontSize:14}}
+              rowStyle={{height:40}}
 
+              dropdownIconPosition="right"
+              renderDropdownIcon={() => <FontAwesome name='angle-down' size={20} />}
 
-          {/* <FlatList
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item
+              }}
+            />
+          </View>
+
+          <FlatList
             numColumns={2}
             // centerContent = {true}
             columnWrapperStyle={{ justifyContent: 'flex-start' }}
@@ -262,7 +170,7 @@ const ProductsScreen = ({ navigation, auth }) => {
             contentContainerStyle={styles.list}
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
-          /> */}
+          />
         </View>
       </TouchableWithoutFeedback>
 

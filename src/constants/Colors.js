@@ -1,5 +1,6 @@
 export const Colors = {
   background: '248,248,255',
+  background2: '245,245,230',
   primary: '111,53,165',
   primaryDark: '0, 0, 41',
   primaryDarker: '15, 5, 33',

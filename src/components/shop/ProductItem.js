@@ -46,9 +46,9 @@ const ProductItem = ({
   const dispatch = useDispatch();
 
   const onItemPress = useCallback(() => {
-    navigation.navigate(navigationRoute, {
-      product,
-    });
+    // navigation.navigate(navigationRoute, {
+    //   product,
+    // });
   }, [product]);
 
   const onActionPress = () => {
@@ -60,23 +60,24 @@ const ProductItem = ({
     <TouchableOpacity activeOpacity={0.6} onPress={onItemPress}>
       <View style={{ ...styles.contentContainer }}>
         <Image style={[styles.image]} source={{ uri: "https://media.istockphoto.com/id/1250483402/vector/important-announcement-speech-bubble-icon-vector-design.jpg?s=612x612&w=0&k=20&c=MSqRVE08RxLlcJaC6aP6ksT0HqHzUGM3Ieyu38hRTIU=" }} resizeMode='cover' />
-        <Text style={{ position: 'absolute', top: 5, left: 11, fontSize: 10, backgroundColor: 'red', color: "white" }}>Đang mở</Text>
+        <Text style={{ position: 'absolute', top: 5, left: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: 'red', color: "white" }}>Đang mở</Text>
+
         <View style={styles.infoSection}>
           <View style={styles.details}>
 
 
-            <View style={{ paddingBottom:15, top:-15 }}>
+            <View style={{ paddingBottom: 0, top: 0}}>
               <Text style={{ fontSize: 10 }}>Bắt đầu:  12/12/2023 12:00</Text>
               <Text style={{ fontSize: 10 }}>Kết thúc: 12/12/2023 12:00</Text>
 
-
+              <Text style={{ position: 'absolute', top: -18, right: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: `rgb(${Colors.accentTwo})`, color: "white" }}>
+                Loại hình 1
+              </Text>
               <Text style={styles.title}>Tên đấu thầu</Text>
               <Text style={styles.title}>Tên bên mời thầu</Text>
             </View>
 
-            <Text style={{ position: 'absolute', bottom: 5, left: 11, fontSize: 10, backgroundColor: 'red', color: "white" }}>
-              Loại hình 1
-            </Text>
+
           </View>
           {/* {!hideActionButton && (
             <ActionButton
@@ -126,12 +127,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignContent: 'center',
-    marginTop: 5,
+    // marginTop: 5,
     // flex: 1
   },
   details: {
     // alignItems: 'center'
-    padding:8
+    padding: 8
   },
   title: {
     fontFamily: 'Lato-Regular',
