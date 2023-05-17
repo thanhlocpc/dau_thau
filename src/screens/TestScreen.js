@@ -17,7 +17,7 @@ const TestScreen = () => {
 
 
   const [web3] = useState(new Web3())
-  const [provider] = useState(new Web3.providers.HttpProvider("https://a13f-171-233-148-143.ngrok-free.app"))
+  const [provider] = useState(new Web3.providers.HttpProvider("https://hhanime.live"))
 
   const getAccounts = async () => {
     try {
@@ -28,7 +28,7 @@ const TestScreen = () => {
       // const trans = await web3.currentProvider.
       // console.log(trans);
 
-      web3.eth.getTransactionCount("0x5aB82333be5a6d59418Bd7679cb0D625959765C1")
+      web3.eth.getTransactionCount("0xdb21B4F88944B4b2e7D1F06C9a64101e44aDEcFF")
         .then((b = console.log) => {
           // console.log(b)
           for (var i = 0; i < b; i++) {
@@ -55,9 +55,9 @@ const TestScreen = () => {
       await connector.sendTransaction({
         from: connector.accounts[0],
         gas: 21000, // add gas to the transaction
-        to: "0xdB1Fa244C416dF5093BBdaC0F23EEb941ca9DAd4",
+        to: "0xFF063e948230c81D77bCa270aa2d99286e142721",
         value: web3.utils.toWei("0.01", "ether"),
-        data: "0x",
+        // data: "0x",
 
       }).then((result) => {
         // Returns transaction id (hash)
@@ -88,6 +88,8 @@ const TestScreen = () => {
       </TouchableOpacity>
 
 
+
+
     </>
   }
   return (
@@ -112,7 +114,7 @@ const TestScreen = () => {
 };
 export default withWalletConnect(TestScreen, {
   redirectUrl:
-    Platform.OS === "web" ? window.location.origin : "https://a13f-171-233-148-143.ngrok-free.app",
+    Platform.OS === "web" ? window.location.origin : "https://hhanime.live",
   storageOptions: {
     asyncStorage: AsyncStorage,
   },
