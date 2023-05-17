@@ -12,171 +12,97 @@ import {
 import Icon from '../components/icons/LightIcons';
 
 import { Colors } from '../constants/Colors';
-import LinearGradient from 'react-native-linear-gradient';
-import ActionComponent from '../components/shop/ActionComponent';
 import { useNavigationState } from '@react-navigation/core';
-import CartIcon from '../components/shop/CartIconComponent';
 import LeftIcon from '../components/icons/LeftIcon';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import Animated, {
-  log,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import FavoriteButton from '../components/shop/FavoriteButton';
-import { addToCart } from '../redux/cart/action';
+const textPrimaryColor = `rgb(${Colors.text.primary})`;
+const primaryColor = `rgb(${Colors.primary})`;
 import { connect, useDispatch } from 'react-redux'
-import { addRecentProduct } from '../redux/recent-product/action';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { goBack } from '../uitls/naviation'
 
 const CartIconOutline = () => <Icon name="cart-o" color="white" size={20} />;
 const snapValue = 24;
 
 const ProductDetailScreen = (props) => {
-
-
   const { cart, auth, favorite, route, navigation } = props
-  const { product } = route.params
-  
   const dispatch = useDispatch();
-  const [isFavorite, setFavorite] = useState(false)
-
-  // Animation...
-  const dimentions = useWindowDimensions();
-  const sheetHeight = useSharedValue(0);
-  const scale = useSharedValue(1);
-
-  const sheetAnimtedStyle = useAnimatedStyle(() => ({
-    height: sheetHeight.value,
-  }));
-
-  const handleAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(scale.value, { stiffness: 300 }) }],
-    backgroundColor:
-      scale.value > 1
-        ? `rgba(${Colors.primaryDark}, 0.5)`
-        : `rgba(${Colors.primaryDark}, 0.3)`,
-  }));
-
-  const resizeEventHandler = useAnimatedGestureHandler({
-    onStart: (event, ctx) => {
-      ctx.startY = event.absoluteY;
-      ctx.startHeight = sheetHeight.value;
-    },
-    onActive: (event, ctx) => {
-      sheetHeight.value = withSpring(
-        ctx.startHeight + (ctx.startY - event.absoluteY),
-      );
-    },
-    onEnd: (_, ctx) => {
-      if (
-        sheetHeight.value - ctx.startHeight > snapValue &&
-        ctx.startHeight < dimentions.height / 1.5
-      ) {
-        sheetHeight.value = withSpring(dimentions.height / 1.5);
-      } else if (
-        sheetHeight.value - ctx.startHeight < snapValue &&
-        ctx.startHeight < dimentions.height / 1.5
-      ) {
-        sheetHeight.value = withSpring(dimentions.height / 3);
-      }
-      if (
-        sheetHeight.value - ctx.startHeight > snapValue &&
-        ctx.startHeight > dimentions.height / 3
-      ) {
-        sheetHeight.value = withSpring(dimentions.height / 1.5);
-      } else if (
-        sheetHeight.value - ctx.startHeight < snapValue &&
-        ctx.startHeight > dimentions.height / 3
-      ) {
-        sheetHeight.value = withSpring(dimentions.height / 3);
-      }
-    },
-  });
-
-  const touchEventHandler = ({ nativeEvent }) => {
-    if (
-      nativeEvent.state === State.BEGAN ||
-      nativeEvent.state === State.ACTIVE
-    ) {
-      scale.value = 1.3;
-      return;
-    }
-    scale.value = 1;
-  };
-  const {items} = favorite
-  useEffect(() => {
-    sheetHeight.value = withSpring(dimentions.height / 3, {
-      damping: 9,
-      stiffness: 50,
-    });
-    let check = false;
-    for (const i of items) {
-      if(i.id == product.id){
-        check = true;
-        break
-      }
-    }
-    setFavorite(check)
-    dispatch(addRecentProduct(auth.user.id, product ))
-  }, [favorite.items,product]);
-
-  const onAddToCart = () => {
-    dispatch(addToCart({ product, oldCart: cart.cart, id: auth.user.id }))
-  }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <View style={styles.image}>
-        <Image style={styles.image} source={{ uri: product.imageUrl }} />
-        <FavoriteButton
-          product={product}
-          isFavorite={isFavorite}
-        // addToFavorite={addToFavorites}
-        // removeFromFavorite={removeFromFavorites}
-        />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.header}>
+        {/* <Text style={styles.titleHeader}></Text> */}
       </View>
-      <LinearGradient
-        colors={[
-          `rgba(${Colors.primaryDarker}, 0.70)`,
-          `rgba(${Colors.primaryDarker}, 0)`,
-        ]}
-        style={styles.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}>
-        <TouchableOpacity style={styles.backButton} onPress={navigation.goBack}>
-          <LeftIcon height={42} width={42} weight={1.3} color="white" />
-        </TouchableOpacity>
-        <CartIcon style={styles.cart} navigation={navigation} color="white" />
-      </LinearGradient>
-      <Animated.View style={sheetAnimtedStyle}>
-        <View style={styles.prodInfo}>
-          <PanGestureHandler
-            onHandlerStateChange={touchEventHandler}
-            onGestureEvent={resizeEventHandler}>
-            <Animated.View style={styles.handleContainer}>
-              <Animated.View style={[styles.handle, handleAnimatedStyle]} />
-            </Animated.View>
-          </PanGestureHandler>
-          <Text style={styles.title}>{product.title}</Text>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.description}>{product.description.split("<br/>").join("\n")}</Text>
+      <View style={styles.containerFull}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => goBack()}
+          >
+            <LeftIcon
+              height={42}
+              width={42}
+              weight={1.3}
+              color={textPrimaryColor}
+            />
+          </TouchableOpacity>
+          <Text style={styles.titleHeader}>Chi tiết đấu thầu</Text>
+
+        </View>
+        <View style={styles.container}>
+          <ScrollView style={{ flex: 1 }}>
+            <View style={styles.screen}>
+
+              <View style={styles.infoContainer}>
+                <View style={{ flexDirection: 'row', marginBottom: 8, }}>
+                  <View style={{ width: 15, backgroundColor: "#00C1FF", height: 30 }}></View>
+                  {/* <Text style={styles.titleDebtInfo}>Chi tiết</Text> */}
+                </View>
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Mô tả: </Text>
+                  <Text style={{ ...styles.text }}>Nguyễn Văn A</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Bên mời thầu: </Text>
+                  <Text style={{ ...styles.text }}>Vietcombank</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Thông số kĩ thuật: </Text>
+                  <Text style={{ ...styles.text }}>Nguyễn Văn B</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Yêu cầu: </Text>
+                  <Text style={{ ...styles.text }}>5.000.000 đ</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Thời gian bắt đầu: </Text>
+                  <Text style={{ ...styles.text }}>12/12/1111</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Thời gian kết thúc: </Text>
+                  <Text style={{ ...styles.text }}>12/12/1111</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Giá khởi điểm: </Text>
+                  <Text style={{ ...styles.text }}>12/12/1111</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Loại hình: </Text>
+                  <Text style={{ ...styles.text }}>Chuyển khoản</Text>
+                </View >
+                <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Trạng thái: </Text>
+                  <Text style={{ ...styles.text }}>Chuyển khoản</Text>
+                </View >
+              </View>
+
+              <View style={styles.infoContainer}>
+                <Text style={{ ...styles.text }}>Tài liệu </Text>
+              </View>
+            </View>
           </ScrollView>
         </View>
-      </Animated.View>
-      <ActionComponent
-        actionTitle="Thêm vào giỏ hàng"
-        label="Giá"
-        amount={product.price}
-        Icon={CartIconOutline}
-        onActionPress={onAddToCart}
-        actionEnabled
-        isLoading={true}
-      />
-    </View>
+      </View>
+    </SafeAreaView >
   );
 };
 
@@ -190,71 +116,79 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(ProductDetailScreen);
 
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  header: {
+    marginHorizontal: 22,
+    marginTop: 0,
+    marginVertical: 10
   },
-  gradient: {
-    height: '20%',
-    width: '100%',
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  titleHeader: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'black',
+    marginLeft: 10
   },
-  image: {
-    position: 'relative',
-    flex: 1,
-    width: '100%',
-  },
-  prodInfo: {
-    paddingHorizontal: 40,
-    backgroundColor: `rgb(${Colors.background})`,
-    borderRadius: 70,
-    flex: 1,
-    top: -55,
-  },
-  handleContainer: {
-    height: 50,
-    width: '100%',
-    justifyContent: 'center',
-  },
-  handle: {
-    height: 5,
-    width: 30,
-    alignSelf: 'center',
-    borderRadius: 50,
-  },
-  title: {
-    fontFamily: 'Lato-Black',
-    fontSize: 20,
-    color: `rgb(${Colors.text.primary})`,
-    marginBottom: 15,
-  },
-  description: {
-    fontFamily: 'Lato-Regular',
-    fontSize: 15,
-    color: `rgba(${Colors.text.primary}, 0.7)`,
-    // paddingRight: 15,
-    marginBottom: 100,
-    textAlign:'justify'
+  containerFull: {
+    flex: 1
   },
   backButton: {
     height: 42,
     width: 42,
-    marginLeft: 30,
-    marginTop: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 20,
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: 'white',
   },
-  cart: {
-    height: 40,
-    width: 40,
+  rightIcon: {
     marginRight: 30,
-    marginTop: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
+  leftIcon: {
+    marginLeft: 20,
+  },
+  center: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: 'center',
+    marginLeft: 10
+  },
+  container: {
+    backgroundColor: `rgb(${Colors.background})`,
+    marginTop: 15,
+    flex: 1,
+  },
+  infoContainer: {
+    borderTopWidth: 5,
+    borderTopColor: '#E5E5E5',
+    paddingHorizontal: 12,
+    paddingVertical: 10
+  },
+  item: {
+    flexDirection: 'row',
+    paddingBottom: 10,
+    // marginTop: margin.small
+  },
+  titleDebtInfo: {
+    marginLeft: 8,
+    fontSize: 18,
+    color: '#686868'
+  },
+
+  text: {
+    fontSize: 18,
+    color: 'black'
+  },
+  rowItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  rightCollectMoneyInfo: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+
+
+
 });

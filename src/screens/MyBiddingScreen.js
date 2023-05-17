@@ -70,36 +70,35 @@ const MyBiddingScreen = ({ navigation, auth }) => {
 
   return (
     <SafeAreaView>
-      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss; setShowSearch(false) }} accessible={false}>
-        <View style={styles.container}>
-          <StatusBar barStyle="dark-content" />
-          <View style={{ ...styles.header, }}>
-            <Text style={styles.titleHeader}>Hồ sơ đã tạo</Text>
-          </View>
-
-          <View style={{ padding: 10 }}>
-
-            <View style={{ backgroundColor: "gray", padding: 5, borderRadius:5, marginBottom:5 }}>
-              <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-                <Text>Tên hồ sơ</Text>
-                <Text>10/10/2022 11:05:30</Text>
-              </View>
-              <Text>Mới tạo</Text>
-            </View>
-
-            <View style={{ backgroundColor: "gray", padding: 5, borderRadius:5, marginBottom:5 }}>
-              <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-                <Text>Tên hồ sơ</Text>
-                <Text>10/10/2022 11:05:30</Text>
-              </View>
-              <Text>Mới tạo</Text>
-            </View>
-
-          </View>
-
-
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <View style={{ ...styles.header, }}>
+          <Text style={styles.titleHeader}>Hồ sơ đã tạo</Text>
         </View>
-      </TouchableWithoutFeedback>
+
+        <View style={{ padding: 10 }}>
+          <TouchableOpacity>
+            <View style={{ backgroundColor: `rgba(${Colors.primary},0.3)`, padding: 10, borderRadius: 5, marginBottom: 10 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Tên hồ sơ</Text>
+                <Text>10/10/2022 11:05:30</Text>
+              </View>
+              <Text>Mới tạo</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+          <View style={{ backgroundColor: `rgba(${Colors.primary},0.3)`, padding: 10, borderRadius: 5, marginBottom: 10 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Tên hồ sơ</Text>
+                <Text>10/10/2022 11:05:30</Text>
+              </View>
+              <Text>Mới tạo</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+      </View>
 
     </SafeAreaView>
 

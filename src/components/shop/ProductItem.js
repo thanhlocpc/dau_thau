@@ -46,9 +46,9 @@ const ProductItem = ({
   const dispatch = useDispatch();
 
   const onItemPress = useCallback(() => {
-    // navigation.navigate(navigationRoute, {
-    //   product,
-    // });
+    navigation.navigate(navigationRoute, {
+      product,
+    });
   }, [product]);
 
   const onActionPress = () => {
@@ -59,18 +59,19 @@ const ProductItem = ({
     // <BoxShadow setting={shadowOpts}>
     <TouchableOpacity activeOpacity={0.6} onPress={onItemPress}>
       <View style={{ ...styles.contentContainer }}>
-        <Image style={[styles.image]} source={{ uri: "https://media.istockphoto.com/id/1250483402/vector/important-announcement-speech-bubble-icon-vector-design.jpg?s=612x612&w=0&k=20&c=MSqRVE08RxLlcJaC6aP6ksT0HqHzUGM3Ieyu38hRTIU=" }} resizeMode='cover' />
-        <Text style={{ position: 'absolute', top: 5, left: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: 'red', color: "white" }}>Đang mở</Text>
+        <Image style={[styles.image]} source={{ uri: "https://static.vecteezy.com/system/resources/previews/006/213/242/original/design-3d-megaphone-purple-announcement-paper-art-style-pastel-free-vector.jpg" }} resizeMode='cover' />
+        <Text style={{ position: 'absolute', top: 5, left: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: 'green', color: "white" }}>Đang mở</Text>
 
         <View style={styles.infoSection}>
           <View style={styles.details}>
 
 
             <View style={{ paddingBottom: 0, top: 0}}>
-              <Text style={{ fontSize: 10 }}>Bắt đầu:  12/12/2023 12:00</Text>
-              <Text style={{ fontSize: 10 }}>Kết thúc: 12/12/2023 12:00</Text>
+              <Text style={{ fontSize: 11 }}>Bắt đầu:  12/12/2023 12:00</Text>
+              <Text style={{ fontSize: 11 }}>Kết thúc: 12/12/2023 12:00</Text>
+              <View style={{height:5, width:5}}/>
 
-              <Text style={{ position: 'absolute', top: -18, right: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: `rgb(${Colors.accentTwo})`, color: "white" }}>
+              <Text style={{ position: 'absolute', top: -30, right: 5, fontSize: 11, paddingHorizontal:5, backgroundColor: `rgba(${Colors.primary},0.6)`, color: "white" }}>
                 Loại hình 1
               </Text>
               <Text style={styles.title}>Tên đấu thầu</Text>
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     borderColor: `rgb(${Colors.text.secondary})`,
     // borderWidth: 0.2,
+    elevation:1
   },
   image: {
     borderRadius: 20,

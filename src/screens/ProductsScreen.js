@@ -120,7 +120,7 @@ const ProductsScreen = ({ navigation, auth }) => {
           <StatusBar barStyle="dark-content" />
           <View style={{ ...styles.header, }}>
             {isShowSearch ?
-              <TextInput returnKeyType='search' autoFocus={true} style={{ ...styles.inputSearch, width: width - 22 * 2 - 26 - 50, }} placeholder='Tìm kiếm' placeholderTextColor='gray' value={search} onChangeText={text => setSearch(text)} onSubmitEditing={onSearch} />
+              <TextInput returnKeyType='search' autoFocus={true} style={{ ...styles.inputSearch, width: width - 22 * 2 - 26, }} placeholder='Tìm kiếm' placeholderTextColor='gray' value={search} onChangeText={text => setSearch(text)} onSubmitEditing={onSearch} />
               : <Text style={styles.titleHeader}>Đấu thầu</Text>}
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
@@ -140,7 +140,7 @@ const ProductsScreen = ({ navigation, auth }) => {
                 console.log(selectedItem, index)
               }}
               defaultButtonText="Loại hình"
-              buttonStyle={{height:30, width:"40%", backgroundColor: `rgb(${Colors.background2})`, borderRadius:5}}
+              buttonStyle={{height:30, width:"40%", backgroundColor: `rgba(${Colors.primary},0.2)`, borderRadius:5}}
               buttonTextStyle={{ textAlign: "left", width: "100%", fontSize:14, }}
               rowTextStyle={{textAlign:"left", fontSize:14}}
               rowStyle={{height:40}}
