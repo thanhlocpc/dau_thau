@@ -14,7 +14,7 @@ const StartScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.startContainer}>
-          <Banner />
+          {/* <Banner /> */}
           <View style={styles.buttonNext}>
             <FormSubmitButton
               isSubmitting={false}
