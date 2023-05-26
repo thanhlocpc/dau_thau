@@ -16,7 +16,6 @@ import {
   useWindowDimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from '../components/icons/LightIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect, useDispatch } from 'react-redux'
@@ -27,7 +26,6 @@ import { Colors } from '../constants/Colors';
 
 const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
-const CartIcons = () => <Icon name="cart-o" color="white" size={16} />;
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 

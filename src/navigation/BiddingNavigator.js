@@ -6,7 +6,6 @@ import { Colors } from '../constants/Colors';
 // import CartIcon from '../components/shop/CartIconComponent';
 import ProfileScreen from '../screens/ProfileScreen';
 import MyBiddingScreen from '../screens/MyBiddingScreen';
-// import FriesOddIcon from '../components/icons/FriesOddIcon';
 
 const Stack = createStackNavigator();
 

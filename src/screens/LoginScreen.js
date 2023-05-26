@@ -10,7 +10,6 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AuthForm from '../components/shop/AuthForm';
 import {Colors} from '../constants/Colors';
-import Banner from '../components/icons/SvgLoginIcon';
 import { connect, useDispatch } from 'react-redux'
 import {login} from '../redux/auth/action'
 import { Image } from 'react-native';

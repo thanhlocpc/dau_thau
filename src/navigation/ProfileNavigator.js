@@ -3,10 +3,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Colors } from '../constants/Colors';
-// import CartIcon from '../components/shop/CartIconComponent';
 import ProfileScreen from '../screens/ProfileScreen';
 import TestScreen from '../screens/TestScreen';
-// import FriesOddIcon from '../components/icons/FriesOddIcon';
 
 const Stack = createStackNavigator();
 

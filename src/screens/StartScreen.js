@@ -1,6 +1,5 @@
 import { Text, StatusBar, StyleSheet, View, ScrollView } from 'react-native';
 import React from 'react';
-import Banner from '../components/icons/SvgChatIcon';
 import FormSubmitButton from '../components/shop/FormSubmitButton';
 const StartScreen = ({ navigation }) => {
   const nextLogin = () => {
@@ -12,9 +11,10 @@ const StartScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} >
         <View style={styles.startContainer}>
           {/* <Banner /> */}
+          <View style={{height:80, width:5}}/>
           <View style={styles.buttonNext}>
             <FormSubmitButton
               isSubmitting={false}
@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
   startContainer: {
     paddingVertical: 80,
     marginHorizontal: 20,
+    justifyContent:"center",
+    flex:1,
   },
   buttonNext: {
     paddingHorizontal: 20,

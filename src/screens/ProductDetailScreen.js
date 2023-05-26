@@ -1,18 +1,13 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  Image,
-  StatusBar,
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import Icon from '../components/icons/LightIcons';
-
 import { Colors } from '../constants/Colors';
-import { useNavigationState } from '@react-navigation/core';
 import LeftIcon from '../components/icons/LeftIcon';
 const textPrimaryColor = `rgb(${Colors.text.primary})`;
 const primaryColor = `rgb(${Colors.primary})`;
@@ -20,7 +15,6 @@ import { connect, useDispatch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { goBack } from '../uitls/naviation'
 
-const CartIconOutline = () => <Icon name="cart-o" color="white" size={20} />;
 const snapValue = 24;
 
 const ProductDetailScreen = (props) => {

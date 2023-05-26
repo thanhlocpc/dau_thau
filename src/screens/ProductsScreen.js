@@ -16,7 +16,6 @@ import {
   useWindowDimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from '../components/icons/LightIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect, useDispatch } from 'react-redux'
@@ -29,14 +28,8 @@ import { Colors } from '../constants/Colors';
 
 const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
-const CartIcons = () => <Icon name="cart-o" color="white" size={16} />;
-import CartIcon from '../components/shop/CartIconComponent';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import firestore from '@react-native-firebase/firestore';
-import { GET_CART } from '../redux/cart/constants';
-import { GET_FAVORITE_PRODUCTS } from '../redux/favorite-product/constants';
-import { LOGOUT } from '../redux/auth/constants';
 
 const textPrimaryColor = `rgb(${Colors.text.primary})`;
 // const width = Dimensions.get('window').width
@@ -69,8 +62,6 @@ const ProductsScreen = ({ navigation, auth }) => {
     SplashScreen.hide();
     // dispatch({type:LOGOUT})
     loadData();
-    dispatch({ type: GET_CART, payload: auth.user.id })
-    dispatch({ type: GET_FAVORITE_PRODUCTS, payload: auth.user.id })
     setWidth(widthScreen)
     return () => {
 
@@ -82,7 +73,7 @@ const ProductsScreen = ({ navigation, auth }) => {
       <ProductItem
         product={item}
         navigationRoute="ProductDetail"
-        ActionIcon={CartIcons}
+        // ActionIcon={CartIcons}
         actionTitle="Thêm vào giỏ hàng"
       // onActionPress={addToCart}
       // onActionPress={() => { }}

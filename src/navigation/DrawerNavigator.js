@@ -14,10 +14,7 @@ import { connect, useDispatch } from 'react-redux'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import Icon from '../components/icons/LightIcons';
 import { Colors } from '../constants/Colors';
-import OrdersScreen from '../screens/OrdersScreen';
-import FriesOddIcon from '../components/icons/FriesOddIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
