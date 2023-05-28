@@ -60,7 +60,7 @@ function* signInWithEmailSaga(action) {
         type: Actions.LOGIN_SUCESS,
         payload: { name: "Loc" }
       })
-      // yield call(saveUser, user._data)
+      yield call(saveUser,  { name: "Loc" })
     }
 
   } catch (error) {
@@ -113,7 +113,7 @@ function* signUpWithEmailSaga(action) {
         type: Actions.LOGIN_SUCESS,
         payload: { name: "Loc" }
       })
-      // yield call(saveUser, user._data)
+      yield call(saveUser, { name: "Loc" })
     } else {
       yield put({
         type: Actions.SIGNUP_FAIL,

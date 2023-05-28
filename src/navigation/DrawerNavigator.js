@@ -52,7 +52,7 @@ const DrawerNavigator = (props) => {
   const widthScreen = useWindowDimensions().width
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getUser(auth.user.id))
+    // dispatch(getUser(auth.user.id))
   }, []);
 
   return (

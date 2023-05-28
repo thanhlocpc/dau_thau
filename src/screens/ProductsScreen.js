@@ -1,7 +1,6 @@
 import React, {
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -16,25 +15,17 @@ import {
   useWindowDimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect, useDispatch } from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
-
-
 import ProductItem from '../components/shop/ProductItem';
 import { Colors } from '../constants/Colors';
-
-
 const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-
-const textPrimaryColor = `rgb(${Colors.text.primary})`;
-// const width = Dimensions.get('window').width
-
 import SelectDropdown from 'react-native-select-dropdown'
+import { baseUrl } from '../uitls/domain';
 const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const ProductsScreen = ({ navigation, auth }) => {
@@ -42,13 +33,12 @@ const ProductsScreen = ({ navigation, auth }) => {
   const [isLoading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isShowSearch, setShowSearch] = useState(false);
-  const [data, setData] = useState([1,2,3])
+  const [data, setData] = useState([1, 2, 3])
   const [search, setSearch] = useState('')
   const widthScreen = useWindowDimensions().width
   const [width, setWidth] = useState(widthScreen)
 
 
-  const favoritesLoaded = useRef(false);
   const [limit, setLimit] = useState(100)
 
   const onSearch = () => {
@@ -56,17 +46,21 @@ const ProductsScreen = ({ navigation, auth }) => {
 
   const loadData = async () => {
     setLoading(true);
+    await fetch(`${baseUrl}/tender_contracts`, {
+      method: "GET",
+      headers: { 'Content-Type': 'application/json', },
+    }).then(res => res.json())
+      .then(res => setData(res?.data?.content))
+      .catch(e => console.log(e))
+      .finally(() => setLoading(false))
   };
   const dispatch = useDispatch()
   useEffect(() => {
     SplashScreen.hide();
-    // dispatch({type:LOGOUT})
     loadData();
-    setWidth(widthScreen)
     return () => {
-
     }
-  }, [widthScreen]);
+  }, []);
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -104,6 +98,57 @@ const ProductsScreen = ({ navigation, auth }) => {
     setShowSearch(true)
   }
 
+  if (isLoading) {
+    return (
+      <SafeAreaView>
+        <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss; setShowSearch(false) }} accessible={false}>
+          <View style={styles.container}>
+            <StatusBar barStyle="dark-content" />
+            <View style={{ ...styles.header, }}>
+              {isShowSearch ?
+                <TextInput returnKeyType='search' autoFocus={true} style={{ ...styles.inputSearch, width: width - 22 * 2 - 26, }} placeholder='Tìm kiếm' placeholderTextColor='gray' value={search} onChangeText={text => setSearch(text)} onSubmitEditing={onSearch} />
+                : <Text style={styles.titleHeader}>Đấu thầu</Text>}
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+
+                {isShowSearch ?
+                  null
+                  : <TouchableOpacity onPress={onPressIconSearch} style={{ marginRight: 10 }}>
+                    <FontAwesome name="search" color="black" size={26} />
+                  </TouchableOpacity>}
+
+              </View>
+
+            </View>
+            <View style={{ padding: 10, justifyContent: "flex-end", flexDirection: 'row' }}>
+              <SelectDropdown
+                data={countries}
+                onSelect={(selectedItem, index) => {
+                  console.log(selectedItem, index)
+                }}
+                defaultButtonText="Loại hình"
+                buttonStyle={{ height: 30, width: "40%", backgroundColor: `rgba(${Colors.primary},0.2)`, borderRadius: 5 }}
+                buttonTextStyle={{ textAlign: "left", width: "100%", fontSize: 14, }}
+                rowTextStyle={{ textAlign: "left", fontSize: 14 }}
+                rowStyle={{ height: 40 }}
+                dropdownIconPosition="right"
+                renderDropdownIcon={() => <FontAwesome name='angle-down' size={20} />}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item
+                }}
+              />
+            </View>
+
+            <ActivityIndicator size='large'color={`rgba(${Colors.primary},0.5)`} />
+          </View>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    );
+  }
+
+  
   return (
     <SafeAreaView>
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss; setShowSearch(false) }} accessible={false}>
@@ -124,29 +169,23 @@ const ProductsScreen = ({ navigation, auth }) => {
             </View>
 
           </View>
-          <View style={{ padding: 10, justifyContent:"flex-end", flexDirection:'row' }}>
+          <View style={{ padding: 10, justifyContent: "flex-end", flexDirection: 'row' }}>
             <SelectDropdown
               data={countries}
               onSelect={(selectedItem, index) => {
                 console.log(selectedItem, index)
               }}
               defaultButtonText="Loại hình"
-              buttonStyle={{height:30, width:"40%", backgroundColor: `rgba(${Colors.primary},0.2)`, borderRadius:5}}
-              buttonTextStyle={{ textAlign: "left", width: "100%", fontSize:14, }}
-              rowTextStyle={{textAlign:"left", fontSize:14}}
-              rowStyle={{height:40}}
-
+              buttonStyle={{ height: 30, width: "40%", backgroundColor: `rgba(${Colors.primary},0.2)`, borderRadius: 5 }}
+              buttonTextStyle={{ textAlign: "left", width: "100%", fontSize: 14, }}
+              rowTextStyle={{ textAlign: "left", fontSize: 14 }}
+              rowStyle={{ height: 40 }}
               dropdownIconPosition="right"
               renderDropdownIcon={() => <FontAwesome name='angle-down' size={20} />}
-
               buttonTextAfterSelection={(selectedItem, index) => {
-                // text represented after item is selected
-                // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem
               }}
               rowTextForSelection={(item, index) => {
-                // text represented for each item in dropdown
-                // if data array is an array of objects then return item.property to represent item in dropdown
                 return item
               }}
             />

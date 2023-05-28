@@ -14,11 +14,13 @@ const primaryColor = `rgb(${Colors.primary})`;
 import { connect, useDispatch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { goBack } from '../uitls/naviation'
+import { formatDateFull } from '../uitls/dateUtils';
 
 const snapValue = 24;
 
 const ProductDetailScreen = (props) => {
-  const { cart, auth, favorite, route, navigation } = props
+  const { route } = props
+  const { product } = route.params
   const dispatch = useDispatch();
 
   return (
@@ -52,8 +54,12 @@ const ProductDetailScreen = (props) => {
                   {/* <Text style={styles.titleDebtInfo}>Chi tiết</Text> */}
                 </View>
                 <View style={styles.rowItem}>
+                  <Text style={{ ...styles.text }}>Tên: </Text>
+                  <Text style={{ ...styles.text }}>{product?.title}</Text>
+                </View >
+                <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Mô tả: </Text>
-                  <Text style={{ ...styles.text }}>Nguyễn Văn A</Text>
+                  <Text style={{ ...styles.text }}>{product?.description}</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Bên mời thầu: </Text>
@@ -61,31 +67,31 @@ const ProductDetailScreen = (props) => {
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Thông số kĩ thuật: </Text>
-                  <Text style={{ ...styles.text }}>Nguyễn Văn B</Text>
+                  <Text style={{ ...styles.text }}>{product?.technicalInfo}</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Yêu cầu: </Text>
-                  <Text style={{ ...styles.text }}>5.000.000 đ</Text>
+                  <Text style={{ ...styles.text }}>{product?.requirements}</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Thời gian bắt đầu: </Text>
-                  <Text style={{ ...styles.text }}>12/12/1111</Text>
+                  <Text style={{ ...styles.text }}>{formatDateFull(new Date(product?.startDateTime))}</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Thời gian kết thúc: </Text>
-                  <Text style={{ ...styles.text }}>12/12/1111</Text>
+                  <Text style={{ ...styles.text }}>{formatDateFull(new Date(product?.endDateTime))}</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Giá khởi điểm: </Text>
-                  <Text style={{ ...styles.text }}>12/12/1111</Text>
+                  <Text style={{ ...styles.text }}>{product?.minimumAmount?.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")} đ</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Loại hình: </Text>
-                  <Text style={{ ...styles.text }}>Chuyển khoản</Text>
+                  <Text style={{ ...styles.text }}>{product?.category}</Text>
                 </View >
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Trạng thái: </Text>
-                  <Text style={{ ...styles.text }}>Chuyển khoản</Text>
+                  <Text style={{ ...styles.text }}>{product?.tenderContractStatus}</Text>
                 </View >
               </View>
 
@@ -170,13 +176,13 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontSize: 18,
+    fontSize: 15  ,
     color: 'black'
   },
   rowItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   rightCollectMoneyInfo: {
     flex: 1,
