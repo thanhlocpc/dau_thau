@@ -26,7 +26,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import SelectDropdown from 'react-native-select-dropdown'
 import { baseUrl } from '../uitls/domain';
-const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+const countries = ["Hàng hóa", "Mĩ phẩm", "Wibu"]
 
 const ProductsScreen = ({ navigation, auth }) => {
 

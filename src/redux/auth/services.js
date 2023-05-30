@@ -12,17 +12,22 @@ export const login = async (username, password) => {
         .catch(e => console.log(e))
 }
 
-export const signup = async (email,firstName, lastName, address, phoneNumber, password) => {
+export const signup = async (email, firstName, lastName, address, phoneNumber, password) => {
     return await fetch(`${baseUrl}/auth`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify({ email,firstName, lastName, address, phoneNumber, password }),
+        body: JSON.stringify({ email, firstName, lastName, address, phoneNumber, password }),
     }).then(res => res.json())
         .catch(e => console.log(e))
 }
 
 
-export const getUser = (id) =>
-    firestore().collection('customer').doc(id).get();
+export const getUser = async (email) =>
+    await fetch(`${baseUrl}/users?_email=${email}`, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json', },
+    })
+        .then(res => res.json())
+        .catch(e => console.log(e))
 
 

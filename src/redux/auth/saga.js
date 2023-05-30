@@ -54,15 +54,22 @@ function* signInWithEmailSaga(action) {
     console.log(data);
     if (data && data.status == 'ok') {
       // get user thật
-      const user = yield call(getUser, data.data[0])
+      const user = yield call(getUser, email)
       console.log(user);
+      if (user && user.status == 'ok') {
+        yield put({
+          type: Actions.LOGIN_SUCESS,
+          payload: user?.data?.content[0]
+        })
+        yield call(saveUser, user?.data?.content[0])
+      }
+    } else {
       yield put({
-        type: Actions.LOGIN_SUCESS,
-        payload: { name: "Loc" }
+        type: Actions.LOGIN_FAIL,
+        payload: data?.message
       })
-      yield call(saveUser,  { name: "Loc" })
+      return;
     }
-
   } catch (error) {
     if (error.code == 'auth/user-not-found') {
       yield put({
