@@ -2,6 +2,7 @@ import React, { useReducer, useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
+import DocumentPicker from 'react-native-document-picker'
 
 import { Colors } from '../../constants/Colors';
 import LabledInput from './LabledInput';
@@ -17,6 +18,8 @@ import {
 } from './inputTypes';
 import ErrorModal from './ErrorModal';
 import FormSubmitButton from './FormSubmitButton';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { baseUrl } from '../../uitls/domain';
 const priceValidator = text => {
   if (isNaN(text) || parseFloat(text) < 0) {
     return { isValid: false, error: 'Please enter a valid positive price' };
@@ -74,6 +77,24 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
   const [alert, setAlert] = useState(false);
   const navigation = useNavigation();
 
+  const [fileFile, setFileFile] = useState([])
+  const [fileImage, setFileImage] = useState([])
+  const [text, setText] = useState("fdf")
+
+  const pickFile = async () => {
+    const res = await DocumentPicker.pick({
+      type: [DocumentPicker.types.allFiles],
+    });
+    console.log(res);
+    setFileFile(res)
+  }
+  const pickImage = async () => {
+    const res = await DocumentPicker.pick({
+      type: [DocumentPicker.types.allFiles],
+    });
+    console.log(res);
+    setFileImage(res)
+  }
 
   useEffect(() => {
     if (
@@ -120,22 +141,66 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
     };
 
   const formSubmitHandler = async () => {
-    if (formIsValid) {
-      setIsSubmitting(true);
-      setActionDisabled(true);
 
-      try {
-        await onSubmit(prodData);
-        navigation.goBack();
-      } catch (err) {
-        if (!err.response) {
-          toggleAlert();
-        }
-        setActionDisabled(false);
-      }
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyZUBnbWFpbC5jb20iLCJpYXQiOjE2ODU4OTI3MzksImV4cCI6MTY4NzEwMjMzOX0.LV0AubXroJgDPncTHuCznGIF9hYblM4sohrlxHmdt1E9yhMO9fiVYJFqn6LtAhaPU5S28t-6qAjvbtr7xC9kAg");
+    myHeaders.append("Content-Type", "multipart/form-data")
+    var formdata = new FormData();
+    formdata.append("documents", fileFile[0]);
+    formdata.append("images", fileImage[0]);
+    formdata.append("type", "1");
 
-      setIsSubmitting(false);
-    }
+    console.log(formdata);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+    setText("")
+    fetch("http://14.225.211.87:8080/api/files", requestOptions)
+      .then(response => response.text())
+      .then(result => { setText(result); console.log(result) })
+      .catch(error => console.log('error', error));
+    // var myHeaders = new Headers();
+    // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyZUBnbWFpbC5jb20iLCJpYXQiOjE2ODU4OTI3MzksImV4cCI6MTY4NzEwMjMzOX0.LV0AubXroJgDPncTHuCznGIF9hYblM4sohrlxHmdt1E9yhMO9fiVYJFqn6LtAhaPU5S28t-6qAjvbtr7xC9kAg");
+    // const data = new FormData();
+    // // data.append('documents', fileFile);
+    // // data.append('images', fileFile);
+    // data.append('type', 1);
+
+
+    // var requestOptions = {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   body: data,
+    //   redirect: 'follow'
+    // };
+    // await fetch(`${baseUrl}/files`, requestOptions).then(res => {
+    //   console.log(res);
+
+    //   console.log(res.json());
+    //   return res.json()
+    // })
+    //   .catch(e => console.log(e))
+    //   .finally(() => setLoading(false))
+    // if (formIsValid) {
+    //   setIsSubmitting(true);
+    //   setActionDisabled(true);
+
+    //   try {
+    //     await onSubmit(prodData);
+    //     navigation.goBack();
+    //   } catch (err) {
+    //     if (!err.response) {
+    //       toggleAlert();
+    //     }
+    //     setActionDisabled(false);
+    //   }
+
+    //   setIsSubmitting(false);
+    // }
 
   };
 
@@ -217,29 +282,11 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         required
         value={price.value?.toString()}
         label="Loại hình"
-        keyboardType="numeric"
         onChangeText={
           product?.price
             ? null
             : newTxt => dispatch({ type: SET_PRICE, payload: newTxt })
         }
-        validators={[priceValidator]}
-        isValid={price.isValid}
-        setIsValid={val => dispatch({ type: SET_PRICE_VALIDATION, payload: val })}
-      />
-       <LabledInput
-        dropdown={true}
-        borderRadius={5}
-        placeholder="Trạng thái"
-        required
-        value={price.value?.toString()}
-        label="Trạng thái"
-        onChangeText={
-          product?.price
-            ? null
-            : newTxt => dispatch({ type: SET_PRICE, payload: newTxt })
-        }
-      
       />
 
       <LabledInput
@@ -259,9 +306,18 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         setIsValid={val => dispatch({ type: SET_PRICE_VALIDATION, payload: val })}
       />
 
+      <TouchableOpacity onPress={pickFile} style={{ borderRadius:5, borderColor: `rgb(${Colors.primary})`, borderWidth: 1, height: 50, marginTop: 10, paddingLeft: 5, justifyContent: 'center' }}>
+        <Text style={{ color: `rgb(${Colors.text.primary})` }}>Chọn tệp {fileFile[0]?.name} {fileFile[0]?.uri}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={pickImage} style={{  borderRadius:5, borderColor: `rgb(${Colors.primary})`, borderWidth: 1, height: 50, marginTop: 10, paddingLeft: 5, justifyContent: 'center' }}>
+        <Text style={{ color: `rgb(${Colors.text.primary})` }}>Chọn hình ảnh {fileImage[0]?.name} {fileImage[0]?.uri}</Text>
+      </TouchableOpacity>
+      <Text style={{ color: `rgb(${Colors.text.primary})` }}>{text}</Text>
+
       <FormSubmitButton
         // shallowAppearance={!formIsValid}
-        disabled={!formIsValid || actionDisabled}
+        // disabled={!formIsValid || actionDisabled}
         title={submitButtonTitle}
         isSubmitting={isSubmitting}
         submitHandler={formSubmitHandler}

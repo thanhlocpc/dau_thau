@@ -46,7 +46,7 @@ const ProductsScreen = ({ navigation, auth }) => {
 
   const loadData = async () => {
     setLoading(true);
-    await fetch(`${baseUrl}/tender_contracts`, {
+    await fetch(`${baseUrl}/tender_contracts?_statuses=CHUAMO,DANGMO,DAKETTHUC`, {
       method: "GET",
       headers: { 'Content-Type': 'application/json', },
     }).then(res => res.json())
