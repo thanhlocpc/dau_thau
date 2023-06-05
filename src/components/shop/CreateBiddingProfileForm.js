@@ -11,10 +11,16 @@ import {
   SET_IMAGE,
   SET_PRICE,
   SET_DESCRIPTION,
+  SET_TECHNICAL_INFO,
+  SET_REQUIREMENTS,
   SET_TITLE_VALIDATION,
   SET_IMAGE_VALIDATION,
   SET_PRICE_VALIDATION,
   SET_DESCRIPTION_VALIDATION,
+  SET_TECHNICAL_INFO_VALIDATION,
+  SET_REQUIREMENTS_VALIDATION,
+  SET_FILES,
+  SET_CATEGORY
 } from './inputTypes';
 import ErrorModal from './ErrorModal';
 import FormSubmitButton from './FormSubmitButton';
@@ -32,23 +38,35 @@ const reducer = (state, { type, payload }) => {
     case SET_TITLE: {
       return { ...state, title: { ...state.title, value: payload } };
     }
-    case SET_IMAGE: {
-      return { ...state, imageUrl: { ...state.imageUrl, value: payload } };
+    case SET_TECHNICAL_INFO: {
+      return { ...state, technicalInfo: { ...state.technicalInfo, value: payload } };
+    }
+    case SET_REQUIREMENTS: {
+      return { ...state, requirements: { ...state.requirements, value: payload } };
     }
     case SET_PRICE: {
-      return { ...state, price: { ...state.price, value: payload } };
+      return { ...state, minimumAmount: { ...state.minimumAmount, value: payload } };
     }
     case SET_DESCRIPTION: {
       return { ...state, description: { ...state.description, value: payload } };
     }
+    case SET_FILES: {
+      return { ...state, files: payload };
+    }
+    case SET_CATEGORY: {
+      return { ...state,  category: payload };
+    }
     case SET_TITLE_VALIDATION: {
       return { ...state, title: { ...state.title, isValid: payload } };
     }
-    case SET_IMAGE_VALIDATION: {
-      return { ...state, imageUrl: { ...state.imageUrl, isValid: payload } };
+    case SET_TECHNICAL_INFO_VALIDATION: {
+      return { ...state, technicalInfo: { ...state.technicalInfo, isValid: payload } };
+    }
+    case SET_REQUIREMENTS_VALIDATION: {
+      return { ...state, requirements: { ...state.requirements, isValid: payload } };
     }
     case SET_PRICE_VALIDATION: {
-      return { ...state, price: { ...state.price, isValid: payload } };
+      return { ...state, minimumAmount: { ...state.minimumAmount, isValid: payload } };
     }
     case SET_DESCRIPTION_VALIDATION: {
       return { ...state, description: { ...state.description, isValid: payload } };
@@ -62,12 +80,18 @@ const reducer = (state, { type, payload }) => {
 const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
   const initialFormState = {
     title: { value: product?.title, isValid: product ? true : false },
-    imageUrl: { value: product?.imageUrl, isValid: product ? true : false },
-    price: { value: product?.price, isValid: product ? true : false },
+    minimumAmount: { value: product?.price, isValid: product ? true : false },
     description: { value: product?.description, isValid: product ? true : false },
+    technicalInfo: { value: product?.technicalInfo, isValid: product ? true : false },
+    requirements: { value: product?.requirements, isValid: product ? true : false },
+    category: "",
+    startDateTime: new Date(),
+    endDateTime: new Date(),
+    files: [],
+    hash: ""
   };
 
-  const [{ title, imageUrl, price, description }, dispatch] = useReducer(
+  const [{ title, minimumAmount, description, technicalInfo, requirements, category, startDateTime, endDateTime, files, mhash }, dispatch] = useReducer(
     reducer,
     initialFormState,
   );
@@ -77,6 +101,7 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
   const [alert, setAlert] = useState(false);
   const navigation = useNavigation();
 
+  // const [files, setFiles] = useState([])
   const [fileFile, setFileFile] = useState([])
   const [fileImage, setFileImage] = useState([])
   const [text, setText] = useState("fdf")
@@ -99,13 +124,15 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
   useEffect(() => {
     if (
       title.value &&
-      imageUrl.value &&
-      price.value &&
+      minimumAmount.value &&
       description.value &&
+      technicalInfo.value &&
+      requirements.value &&
       title.isValid &&
-      imageUrl.isValid &&
-      price.isValid &&
-      description.isValid
+      minimumAmount.isValid &&
+      description.isValid &&
+      technicalInfo.isValid &&
+      requirements.isValid 
     ) {
       setFormIsValid(true);
     } else {
@@ -113,32 +140,16 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
     }
   }, [
     title.value,
-    imageUrl.value,
-    price.value,
+    minimumAmount.value,
     description.value,
+    technicalInfo.value,
+    requirements.value,
     title.isValid,
-    imageUrl.isValid,
-    price.isValid,
+    minimumAmount.isValid,
     description.isValid,
-    formIsValid,
+    technicalInfo.isValid,
+    requirements.isValid,
   ]);
-
-  const prodData = product
-    ? {
-      id: product.id,
-      ownerId: product.ownerId,
-      title: title.value,
-      imageUrl: imageUrl.value,
-      description: description.value,
-      price: product.price,
-    }
-    : {
-      ownerId: "userId",
-      title: title.value,
-      imageUrl: imageUrl.value,
-      description: description.value,
-      price: parseFloat(price.value),
-    };
 
   const formSubmitHandler = async () => {
 
@@ -159,48 +170,19 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
       redirect: 'follow'
     };
     setText("")
-    fetch("http://14.225.211.87:8080/api/files", requestOptions)
-      .then(response => response.text())
-      .then(result => { setText(result); console.log(result) })
+    await fetch("http://14.225.211.87:8080/api/files", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        dispatch({ type: SET_FILES, payload: result?.data })
+        setText(JSON.stringify(result)); console.log(result)
+      })
       .catch(error => console.log('error', error));
-    // var myHeaders = new Headers();
-    // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyZUBnbWFpbC5jb20iLCJpYXQiOjE2ODU4OTI3MzksImV4cCI6MTY4NzEwMjMzOX0.LV0AubXroJgDPncTHuCznGIF9hYblM4sohrlxHmdt1E9yhMO9fiVYJFqn6LtAhaPU5S28t-6qAjvbtr7xC9kAg");
-    // const data = new FormData();
-    // // data.append('documents', fileFile);
-    // // data.append('images', fileFile);
-    // data.append('type', 1);
+
+    // if upload ok then payment
+
+    // create contract
 
 
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: data,
-    //   redirect: 'follow'
-    // };
-    // await fetch(`${baseUrl}/files`, requestOptions).then(res => {
-    //   console.log(res);
-
-    //   console.log(res.json());
-    //   return res.json()
-    // })
-    //   .catch(e => console.log(e))
-    //   .finally(() => setLoading(false))
-    // if (formIsValid) {
-    //   setIsSubmitting(true);
-    //   setActionDisabled(true);
-
-    //   try {
-    //     await onSubmit(prodData);
-    //     navigation.goBack();
-    //   } catch (err) {
-    //     if (!err.response) {
-    //       toggleAlert();
-    //     }
-    //     setActionDisabled(false);
-    //   }
-
-    //   setIsSubmitting(false);
-    // }
 
   };
 
@@ -239,39 +221,39 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         }
       />
       <LabledInput
-        placeholder="Mô tả"
+        placeholder="Thống số kĩ thuật"
         required
         multiline
         large
         autoCapitalize="sentences"
-        value={description.value}
+        value={technicalInfo.value}
         borderRadius={5}
-        label="Mô tả"
+        label="Thông số kĩ thuật"
         onChangeText={newTxt =>
-          dispatch({ type: SET_DESCRIPTION, payload: newTxt })
+          dispatch({ type: SET_TECHNICAL_INFO, payload: newTxt })
         }
-        isValid={description.isValid}
+        isValid={technicalInfo.isValid}
         setIsValid={val =>
-          dispatch({ type: SET_DESCRIPTION_VALIDATION, payload: val })
+          dispatch({ type: SET_TECHNICAL_INFO_VALIDATION, payload: val })
         }
       />
 
 
       <LabledInput
-        placeholder="Mô tả"
+        placeholder="Yêu cầu"
         required
         multiline
         large
         autoCapitalize="sentences"
-        value={description.value}
+        value={requirements.value}
         borderRadius={5}
-        label="Mô tả"
+        label="Yêu cầu"
         onChangeText={newTxt =>
-          dispatch({ type: SET_DESCRIPTION, payload: newTxt })
+          dispatch({ type: SET_REQUIREMENTS, payload: newTxt })
         }
-        isValid={description.isValid}
+        isValid={requirements.isValid}
         setIsValid={val =>
-          dispatch({ type: SET_DESCRIPTION_VALIDATION, payload: val })
+          dispatch({ type: SET_REQUIREMENTS_VALIDATION, payload: val })
         }
       />
 
@@ -282,10 +264,7 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         required
         value={price.value?.toString()}
         label="Loại hình"
-        onChangeText={
-          product?.price
-            ? null
-            : newTxt => dispatch({ type: SET_PRICE, payload: newTxt })
+        onChangeText={ newTxt => dispatch({ type: SET_CATEGORY, payload: newTxt })
         }
       />
 
@@ -293,11 +272,11 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         borderRadius={5}
         placeholder="Giá khởi điểm"
         required
-        value={price.value?.toString()}
+        value={minimumAmount.value?.toString()}
         label="Giá"
         keyboardType="numeric"
         onChangeText={
-          product?.price
+          product?.minimumAmount
             ? null
             : newTxt => dispatch({ type: SET_PRICE, payload: newTxt })
         }
@@ -306,11 +285,11 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         setIsValid={val => dispatch({ type: SET_PRICE_VALIDATION, payload: val })}
       />
 
-      <TouchableOpacity onPress={pickFile} style={{ borderRadius:5, borderColor: `rgb(${Colors.primary})`, borderWidth: 1, height: 50, marginTop: 10, paddingLeft: 5, justifyContent: 'center' }}>
+      <TouchableOpacity onPress={pickFile} style={{ borderRadius: 5, borderColor: `rgb(${Colors.primary})`, borderWidth: 1, height: 50, marginTop: 10, paddingLeft: 5, justifyContent: 'center' }}>
         <Text style={{ color: `rgb(${Colors.text.primary})` }}>Chọn tệp {fileFile[0]?.name} {fileFile[0]?.uri}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={pickImage} style={{  borderRadius:5, borderColor: `rgb(${Colors.primary})`, borderWidth: 1, height: 50, marginTop: 10, paddingLeft: 5, justifyContent: 'center' }}>
+      <TouchableOpacity onPress={pickImage} style={{ borderRadius: 5, borderColor: `rgb(${Colors.primary})`, borderWidth: 1, height: 50, marginTop: 10, paddingLeft: 5, justifyContent: 'center' }}>
         <Text style={{ color: `rgb(${Colors.text.primary})` }}>Chọn hình ảnh {fileImage[0]?.name} {fileImage[0]?.uri}</Text>
       </TouchableOpacity>
       <Text style={{ color: `rgb(${Colors.text.primary})` }}>{text}</Text>

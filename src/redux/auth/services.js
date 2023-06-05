@@ -8,8 +8,9 @@ export const login = async (username, password) => {
         method: "POST",
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify({ username, password }),
+        redirect: 'follow'
     }).then(res => res.json())
-        .catch(e => console.log(e))
+        .catch(e => e)
 }
 
 export const signup = async (email, firstName, lastName, address, phoneNumber, password) => {

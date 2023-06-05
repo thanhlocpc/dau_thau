@@ -142,6 +142,7 @@ const LabledInput = ({
           {dropdown ? <SelectDropdown
             data={countries}
             onSelect={(selectedItem, index) => {
+              onChangeText(selectedItem)
               console.log(selectedItem, index)
             }}
             defaultButtonText={label}

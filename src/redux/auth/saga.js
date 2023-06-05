@@ -12,6 +12,7 @@ import { put, call, select, takeEvery } from 'redux-saga/effects';
 // import { showMessage } from 'react-native-flash-message';
 
 import * as Actions from './constants';
+import Global from '../../uitls/Global';
 
 // import NavigationService from 'src/utils/navigation';
 
@@ -57,6 +58,7 @@ function* signInWithEmailSaga(action) {
       const user = yield call(getUser, email)
       console.log(user);
       if (user && user.status == 'ok') {
+        Global.setToken(data[0])
         yield put({
           type: Actions.LOGIN_SUCESS,
           payload: user?.data?.content[0]
@@ -66,7 +68,7 @@ function* signInWithEmailSaga(action) {
     } else {
       yield put({
         type: Actions.LOGIN_FAIL,
-        payload: data?.message
+        payload: data?.message ? data?.message : "Lỗi"
       })
       return;
     }
@@ -114,13 +116,13 @@ function* signUpWithEmailSaga(action) {
 
     if (data && data.status == 'ok') {
       // get user thật
-      const user = yield call(getUser, data.data[0])
-      console.log(user);
+      // const user = yield call(getUser, data.data[0])
+      // console.log(user);
       yield put({
         type: Actions.LOGIN_SUCESS,
-        payload: { name: "Loc" }
+        payload: data.data
       })
-      yield call(saveUser, { name: "Loc" })
+      yield call(saveUser, data.data)
     } else {
       yield put({
         type: Actions.SIGNUP_FAIL,
