@@ -54,11 +54,13 @@ function* signInWithEmailSaga(action) {
     const data = yield call(login, email, password)
     console.log(data);
     if (data && data.status == 'ok') {
+      Global.setToken(data.data[0])
+      console.log(Global.getToken());
       // get user thật
       const user = yield call(getUser, email)
       console.log(user);
       if (user && user.status == 'ok') {
-        Global.setToken(data[0])
+      
         yield put({
           type: Actions.LOGIN_SUCESS,
           payload: user?.data?.content[0]

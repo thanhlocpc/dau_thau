@@ -27,7 +27,7 @@ const getColor = (isValid, finishedEditing, focused, defaultColor) => {
 
   return defaultColor;
 };
-const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+const countries = ["HANGHOA", "PHITUVAN", "TUVAN", "XAYLAP", "HONHOP"]
 
 const LabledInput = ({
   label,

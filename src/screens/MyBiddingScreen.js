@@ -57,7 +57,7 @@ const MyBiddingScreen = ({ navigation, auth }) => {
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" />
         <View style={{ ...styles.header, }}>
-          <Text style={styles.titleHeader}>Hồ sơ đã tạo</Text>
+          <Text style={styles.titleHeader}>Hồ sơ đã tham gia</Text>
         </View>
 
         <View style={{ padding: 10 }}>

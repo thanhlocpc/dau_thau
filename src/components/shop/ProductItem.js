@@ -12,6 +12,7 @@ const width = (widthScreen - 15 * 3) / 2 > 170 ? 170 : (widthScreen - 15 * 3) / 
 import firestore from '@react-native-firebase/firestore';
 import { connect, useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/cart/action'
+import { formatDateFull } from '../../uitls/dateUtils';
 
 
 const CARD_HEIGHT = 290;
@@ -66,8 +67,8 @@ const ProductItem = ({
           <View style={styles.details}>
 
             <View style={{ paddingBottom: 0, top: 0}}>
-              <Text style={{ fontSize: 11 }}>Bắt đầu: {product?.startDateTime}</Text>
-              <Text style={{ fontSize: 11 }}>Kết thúc: {product?.endDateTime}</Text>
+              <Text style={{ fontSize: 11, color: `rgb(${Colors.text.secondary})` }}>Bắt đầu: {formatDateFull(new Date(product?.startDateTime))}</Text>
+              <Text style={{ fontSize: 11, color: `rgb(${Colors.text.secondary})` }}npm install react-native-date-picker>Kết thúc: {formatDateFull(new Date(product?.endDateTime))}</Text>
               <View style={{height:5, width:5}}/>
 
               <Text style={{ position: 'absolute', top: -30, right: 5, fontSize: 11, paddingHorizontal:5, backgroundColor: `rgba(${Colors.primary},0.6)`, color: "white" }}>
