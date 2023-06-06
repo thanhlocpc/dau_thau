@@ -36,6 +36,7 @@ import { baseUrl } from '../../uitls/domain';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { insertTenderContract } from '../../redux/contracts/services';
 import { formatDateFull } from '../../uitls/dateUtils';
+import Global from '../../uitls/Global';
 const priceValidator = text => {
   if (isNaN(text) || parseFloat(text) < 0) {
     return { isValid: false, error: 'Please enter a valid positive price' };
@@ -94,6 +95,10 @@ const reducer = (state, { type, payload }) => {
 };
 
 const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
+
+
+
+
   const initialFormState = {
     title: { value: product?.title, isValid: product ? true : false },
     minimumAmount: { value: product?.price, isValid: product ? true : false },
@@ -143,6 +148,18 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
   const [provider] = useState(new Web3.providers.HttpProvider("https://hhanime.live"))
   web3.setProvider(provider)
   const connector = useWalletConnect();
+  useEffect(() => {
+    load()
+  }, [])
+
+  const load = async()=>{
+    if (connector) {
+      console.log(connector);
+      if (!connector.connected)
+     await   connector.connect()
+    }
+  }
+
 
   useEffect(() => {
     if (
@@ -174,11 +191,14 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
     requirements.isValid,
   ]);
 
+
+
+  
   const formSubmitHandler = async () => {
     try {
       setIsSubmitting(true)
       var myHeaders = new Headers();
-      myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyZUBnbWFpbC5jb20iLCJpYXQiOjE2ODU4OTI3MzksImV4cCI6MTY4NzEwMjMzOX0.LV0AubXroJgDPncTHuCznGIF9hYblM4sohrlxHmdt1E9yhMO9fiVYJFqn6LtAhaPU5S28t-6qAjvbtr7xC9kAg");
+      myHeaders.append("Authorization", `Bearer ${Global.getToken()}`);
       myHeaders.append("Content-Type", "multipart/form-data")
       var formdata = new FormData();
       formdata.append("documents", fileFile[0]);
@@ -194,14 +214,20 @@ const CreateBiddingProfileForm = ({ submitButtonTitle, product, onSubmit }) => {
         redirect: 'follow'
       };
       setText("")
+      let filess = []
       await fetch("http://14.225.211.87:8080/api/files", requestOptions)
         .then(response => response.json())
         .then(result => {
-          dispatch({ type: SET_FILES, payload: result?.data })
+          filess = result?.data;
           setText(JSON.stringify(result)); console.log(result)
         })
         .catch(error => console.log('error', error));
 
+
+      if (!files) {
+        Alert.alert("File không hợp lệ")
+        return;
+      }
       // if upload ok then payment
       const hash = await transaction()
       if (hash) {

@@ -61,8 +61,8 @@ const ProductDetailScreen = (props) => {
                 <View style={{ flexDirection: 'row', marginBottom: 8, }}>
                   <View style={{ width: 15, backgroundColor: "#00C1FF", height: 30 }}></View>
                   {/* <Text style={styles.titleDebtInfo}>Chi tiết</Text> */}
-                  <TouchableOpacity onPress={joinPress}>
-                    <Text>Tham gia</Text>
+                  <TouchableOpacity onPress={joinPress} style={{backgroundColor:`rgba(${Colors.primary},0.6)`, justifyContent:'center', paddingHorizontal:8,}}>
+                    <Text style={{color:"white"}}>Tham gia</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.rowItem}>
@@ -108,7 +108,11 @@ const ProductDetailScreen = (props) => {
               </View>
 
               <View style={styles.infoContainer}>
-                <Text style={{ ...styles.text }}>Tài liệu </Text>
+                <Text style={{ ...styles.text, fontWeight:"bold" }}>Tài liệu </Text>
+                <Text style={{ ...styles.text }}>{product.files[0]?.title} </Text>
+                <Text style={{ ...styles.text }}>{product.files[1]?.title} </Text>
+
+
               </View>
             </View>
           </ScrollView>

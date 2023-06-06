@@ -23,7 +23,8 @@ import { Colors } from '../constants/Colors';
 
 const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { RefreshControl, TouchableOpacity } from 'react-native-gesture-handler';
+import { getBids } from '../redux/contracts/services';
 
 const textPrimaryColor = `rgb(${Colors.text.primary})`;
 // const width = Dimensions.get('window').width
@@ -33,7 +34,7 @@ const MyBiddingScreen = ({ navigation, auth }) => {
   const [isLoading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isShowSearch, setShowSearch] = useState(false);
-  const [data, setData] = useState([1, 2, 3])
+  const [data, setData] = useState([])
   const [search, setSearch] = useState('')
   const widthScreen = useWindowDimensions().width
   const [width, setWidth] = useState(widthScreen)
@@ -44,13 +45,50 @@ const MyBiddingScreen = ({ navigation, auth }) => {
 
   const loadData = async () => {
     setLoading(true);
+    const d = await getBids(auth?.user?.email);
+    setData(d?.data?.content)
+    setLoading(false)
   };
   const dispatch = useDispatch()
   useEffect(() => {
-    setWidth(widthScreen)
-    return () => {
-    }
-  }, [widthScreen]);
+    loadData()
+  }, []);
+
+  const refreshControl = useCallback(() => {
+    return (
+      <RefreshControl
+        refreshing={isRefreshing}
+        onRefresh={async () => {
+          setIsRefreshing(true);
+          await loadData();
+          setIsRefreshing(false);
+        }}
+        tintColor={primaryColor}
+        colors={[primaryColor]}
+      />
+    );
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView>
+        <View style={styles.container}>
+          <StatusBar barStyle="dark-content" />
+          <View style={{ ...styles.header, }}>
+            <Text style={styles.titleHeader}>Hồ sơ đã tham gia</Text>
+          </View>
+
+          <View style={{ padding: 10 }}>
+          <ActivityIndicator size='large' color={`rgba(${Colors.primary},0.5)`} />
+
+          </View>
+
+        </View>
+
+      </SafeAreaView>
+
+    );
+  };
 
   return (
     <SafeAreaView>
@@ -61,25 +99,24 @@ const MyBiddingScreen = ({ navigation, auth }) => {
         </View>
 
         <View style={{ padding: 10 }}>
-          <TouchableOpacity>
-            <View style={{ backgroundColor: `rgba(${Colors.primary},0.3)`, padding: 10, borderRadius: 5, marginBottom: 10 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Tên hồ sơ</Text>
-                <Text>10/10/2022 11:05:30</Text>
-              </View>
-              <Text>Mới tạo</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-          <View style={{ backgroundColor: `rgba(${Colors.primary},0.3)`, padding: 10, borderRadius: 5, marginBottom: 10 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Tên hồ sơ</Text>
-                <Text>10/10/2022 11:05:30</Text>
-              </View>
-              <Text>Mới tạo</Text>
-            </View>
-          </TouchableOpacity>
+          <FlatList
+            style={{ minHeight: 200 }}
+            data={data}
+            refreshControl={refreshControl()}
+            renderItem={({ item }) => (
+              <TouchableOpacity>
+                <View style={{ backgroundColor: `rgba(${Colors.primary},0.6)`, padding: 10, borderRadius: 5, marginBottom: 10 }}>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}>tenderContractId: {item?.tenderContractId}</Text>
+                    <Text>Trạng thái: {item?.status}</Text>
+                  </View>
+                  <Text>Mô tả: {item?.description}</Text>
+                  <Text>Giá đề xuất: {item?.proposedPrice}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item.id}
+          />
         </View>
 
       </View>
@@ -88,6 +125,9 @@ const MyBiddingScreen = ({ navigation, auth }) => {
 
   );
 };
+
+
+
 
 const mapStateToProps = state => {
   return {

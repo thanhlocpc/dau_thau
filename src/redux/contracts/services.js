@@ -17,7 +17,7 @@ export const insertTenderContract = async (data) => {
         })
 }
 
-export const joinTenderContract = async (email) => {
+export const joinTenderContract = async (data) => {
     return await fetch(`${baseUrl}/bids`, {
         method: "POST",
         headers: {

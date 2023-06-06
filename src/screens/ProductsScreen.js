@@ -26,7 +26,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import SelectDropdown from 'react-native-select-dropdown'
 import { baseUrl } from '../uitls/domain';
-const countries = ["Hàng hóa", "Mĩ phẩm", "Wibu"]
+import Global from '../uitls/Global';
+const countries = ["Tất cả", "HANGHOA", "PHITUVAN", "TUVAN", "XAYLAP", "HONHOP"]
+
 
 const ProductsScreen = ({ navigation, auth }) => {
 
@@ -48,12 +50,30 @@ const ProductsScreen = ({ navigation, auth }) => {
     setLoading(true);
     await fetch(`${baseUrl}/tender_contracts?_statuses=CHUAMO,DANGMO,DAKETTHUC`, {
       method: "GET",
-      headers: { 'Content-Type': 'application/json', },
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${Global.getToken()}`,
+      },
     }).then(res => res.json())
       .then(res => setData(res?.data?.content))
       .catch(e => console.log(e))
       .finally(() => setLoading(false))
   };
+
+  const searchType = async (type) => {
+    setLoading(true);
+    await fetch(`${baseUrl}/tender_contracts?_category=${type}&_owner_email=${auth?.user?.email}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${Global.getToken()}`,
+      },
+    }).then(res => res.json())
+      .then(res => setData(res?.data?.content))
+      .catch(e => console.log(e))
+      .finally(() => setLoading(false))
+  };
+
   const dispatch = useDispatch()
   useEffect(() => {
     SplashScreen.hide();
@@ -122,8 +142,13 @@ const ProductsScreen = ({ navigation, auth }) => {
             <View style={{ padding: 10, justifyContent: "flex-end", flexDirection: 'row' }}>
               <SelectDropdown
                 data={countries}
-                onSelect={(selectedItem, index) => {
+                onSelect={async (selectedItem, index) => {
                   console.log(selectedItem, index)
+                  if (selectedItem == "Tất cả") {
+                    await loadData()
+                  } else {
+                    await searchType(selectedItem)
+                  }
                 }}
                 defaultButtonText="Loại hình"
                 buttonStyle={{ height: 30, width: "40%", backgroundColor: `rgba(${Colors.primary},0.2)`, borderRadius: 5 }}
@@ -141,14 +166,14 @@ const ProductsScreen = ({ navigation, auth }) => {
               />
             </View>
 
-            <ActivityIndicator size='large'color={`rgba(${Colors.primary},0.5)`} />
+            <ActivityIndicator size='large' color={`rgba(${Colors.primary},0.5)`} />
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     );
   }
 
-  
+
   return (
     <SafeAreaView>
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss; setShowSearch(false) }} accessible={false}>
@@ -172,8 +197,13 @@ const ProductsScreen = ({ navigation, auth }) => {
           <View style={{ padding: 10, justifyContent: "flex-end", flexDirection: 'row' }}>
             <SelectDropdown
               data={countries}
-              onSelect={(selectedItem, index) => {
+              onSelect={async (selectedItem, index) => {
                 console.log(selectedItem, index)
+                if (selectedItem == "Tất cả") {
+                  await loadData()
+                } else {
+                  await searchType(selectedItem)
+                }
               }}
               defaultButtonText="Loại hình"
               buttonStyle={{ height: 30, width: "40%", backgroundColor: `rgba(${Colors.primary},0.2)`, borderRadius: 5 }}
