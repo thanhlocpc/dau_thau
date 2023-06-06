@@ -11,38 +11,22 @@ import {
   StatusBar,
   ActivityIndicator,
   Text,
-  RefreshControl,
-  TextInput, Dimensions, TouchableWithoutFeedback, Keyboard,
   useWindowDimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from '../components/icons/LightIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect, useDispatch } from 'react-redux'
-import SplashScreen from 'react-native-splash-screen'
 
-
-import ProductItem from '../components/shop/ProductItem';
 import { Colors } from '../constants/Colors';
 
 
 const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
-const CartIcons = () => <Icon name="cart-o" color="white" size={16} />;
-import CartIcon from '../components/shop/CartIconComponent';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import firestore from '@react-native-firebase/firestore';
-import { GET_CART } from '../redux/cart/constants';
-import { GET_FAVORITE_PRODUCTS } from '../redux/favorite-product/constants';
-import { LOGOUT } from '../redux/auth/constants';
 
 const textPrimaryColor = `rgb(${Colors.text.primary})`;
 // const width = Dimensions.get('window').width
-
-import SelectDropdown from 'react-native-select-dropdown'
-const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const MyBiddingScreen = ({ navigation, auth }) => {
 
@@ -73,7 +57,7 @@ const MyBiddingScreen = ({ navigation, auth }) => {
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" />
         <View style={{ ...styles.header, }}>
-          <Text style={styles.titleHeader}>Hồ sơ đã tạo</Text>
+          <Text style={styles.titleHeader}>Hồ sơ đã tham gia</Text>
         </View>
 
         <View style={{ padding: 10 }}>

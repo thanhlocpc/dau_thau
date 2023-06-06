@@ -31,8 +31,8 @@ const SignupScreen = ({navigation}) => {
   }, []);
 
   const dispatch = useDispatch()
-  const submit = (email,password,name)=>{
-    dispatch(signup({email,password,name}))
+  const submit = (email,firstName, lastName, address, phoneNumber, password)=>{
+    dispatch(signup({email,firstName, lastName, address, phoneNumber, password}))
   }
 
   return (

@@ -18,6 +18,7 @@ const TestScreen = () => {
 
   const [web3] = useState(new Web3())
   const [provider] = useState(new Web3.providers.HttpProvider("https://hhanime.live"))
+  web3.setProvider(provider)
 
   const getAccounts = async () => {
     try {
@@ -48,6 +49,15 @@ const TestScreen = () => {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const getTransaction = async (hash) => {
+    try {
+      return await web3.eth.getTransaction(hash)
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
   }
 
   const transaction = async () => {

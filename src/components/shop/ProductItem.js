@@ -12,6 +12,7 @@ const width = (widthScreen - 15 * 3) / 2 > 170 ? 170 : (widthScreen - 15 * 3) / 
 import firestore from '@react-native-firebase/firestore';
 import { connect, useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/cart/action'
+import { formatDateFull } from '../../uitls/dateUtils';
 
 
 const CARD_HEIGHT = 290;
@@ -60,22 +61,21 @@ const ProductItem = ({
     <TouchableOpacity activeOpacity={0.6} onPress={onItemPress}>
       <View style={{ ...styles.contentContainer }}>
         <Image style={[styles.image]} source={{ uri: "https://static.vecteezy.com/system/resources/previews/006/213/242/original/design-3d-megaphone-purple-announcement-paper-art-style-pastel-free-vector.jpg" }} resizeMode='cover' />
-        <Text style={{ position: 'absolute', top: 5, left: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: 'green', color: "white" }}>Đang mở</Text>
+        <Text style={{ position: 'absolute', top: 5, left: 11, fontSize: 11, paddingHorizontal:5, backgroundColor: 'green', color: "white" }}>{product?.tenderContractStatus}</Text>
 
         <View style={styles.infoSection}>
           <View style={styles.details}>
 
-
             <View style={{ paddingBottom: 0, top: 0}}>
-              <Text style={{ fontSize: 11 }}>Bắt đầu:  12/12/2023 12:00</Text>
-              <Text style={{ fontSize: 11 }}>Kết thúc: 12/12/2023 12:00</Text>
+              <Text style={{ fontSize: 11, color: `rgb(${Colors.text.secondary})` }}>Bắt đầu: {formatDateFull(new Date(product?.startDateTime))}</Text>
+              <Text style={{ fontSize: 11, color: `rgb(${Colors.text.secondary})` }}npm install react-native-date-picker>Kết thúc: {formatDateFull(new Date(product?.endDateTime))}</Text>
               <View style={{height:5, width:5}}/>
 
               <Text style={{ position: 'absolute', top: -30, right: 5, fontSize: 11, paddingHorizontal:5, backgroundColor: `rgba(${Colors.primary},0.6)`, color: "white" }}>
-                Loại hình 1
+                {product?.category}
               </Text>
-              <Text style={styles.title}>Tên đấu thầu</Text>
-              <Text style={styles.title}>Tên bên mời thầu</Text>
+              <Text style={styles.title}>{product?.title}</Text>
+              <Text style={styles.title}>{product?.technicalInfo}</Text>
             </View>
 
 

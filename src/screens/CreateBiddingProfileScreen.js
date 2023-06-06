@@ -6,61 +6,34 @@ import React, {
 } from 'react';
 import {
   StyleSheet,
-  FlatList,
   View,
   StatusBar,
   ActivityIndicator,
   Text,
-  RefreshControl,
-  TextInput, Dimensions, TouchableWithoutFeedback, Keyboard,
   useWindowDimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from '../components/icons/LightIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect, useDispatch } from 'react-redux'
-
-
 import { Colors } from '../constants/Colors';
-
 
 const primaryColor = `rgb(${Colors.primary})`;
 const textSecondaryColor = `rgba(${Colors.text.secondary}, 0.7)`;
-const CartIcons = () => <Icon name="cart-o" color="white" size={16} />;
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
-
 const textPrimaryColor = `rgb(${Colors.text.primary})`;
-// const width = Dimensions.get('window').width
-
-import SelectDropdown from 'react-native-select-dropdown'
 import CreateBiddingProfileForm from '../components/shop/CreateBiddingProfileForm';
-const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const CreateBiddingProfileScreen = ({ navigation, auth }) => {
 
   const [isLoading, setLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isShowSearch, setShowSearch] = useState(false);
-  const [data, setData] = useState([1, 2, 3])
-  const [search, setSearch] = useState('')
   const widthScreen = useWindowDimensions().width
-  const [width, setWidth] = useState(widthScreen)
 
-
-  const onSearch = () => {
-  }
 
   const loadData = async () => {
     setLoading(true);
   };
   const dispatch = useDispatch()
-  useEffect(() => {
-    setWidth(widthScreen)
-    return () => {
-    }
-  }, [widthScreen]);
 
   return (
     <SafeAreaView>
@@ -75,8 +48,6 @@ const CreateBiddingProfileScreen = ({ navigation, auth }) => {
           <CreateBiddingProfileForm onSubmit={() => { }} submitButtonTitle="Tạo hồ sơ" />
         </View>
         </ScrollView>
-      
-
 
       </View>
 

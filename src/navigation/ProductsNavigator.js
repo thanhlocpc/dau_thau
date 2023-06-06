@@ -4,12 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import ProductsScreen from '../screens/ProductsScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
-import OrdersScreen from '../screens/OrdersScreen';
 import { Colors } from '../constants/Colors';
-import CartScreen from '../screens/CartScreen';
-// import CartIcon from '../components/shop/CartIconComponent';
 import LeftIcon from '../components/icons/LeftIcon';
-// import FriesOddIcon from '../components/icons/FriesOddIcon';
+import JoinTenderContractsScreen from '../screens/JoinTenderContractsScreen';
 
 const Stack = createStackNavigator();
 
@@ -50,30 +47,12 @@ const ProductsNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Cart"
-        component={CartScreen}
-        options={({ navigation }) => ({
-          title: 'Giỏ hàng',
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={navigation.goBack}>
-              <LeftIcon
-                height={42}
-                width={42}
-                weight={1.3}
-                color={textPrimaryColor}
-              />
-            </TouchableOpacity>
-          ),
-        })}
-      />
-
-      <Stack.Screen
-        name="order"
-        component={OrdersScreen}
+        name="JoinTenderContracts"
+        component={JoinTenderContractsScreen}
         options={{ headerShown: false }}
       />
+
+     
     </Stack.Navigator>
   );
 };

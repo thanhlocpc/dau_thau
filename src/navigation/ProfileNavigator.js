@@ -3,9 +3,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Colors } from '../constants/Colors';
-// import CartIcon from '../components/shop/CartIconComponent';
 import ProfileScreen from '../screens/ProfileScreen';
-// import FriesOddIcon from '../components/icons/FriesOddIcon';
+import TestScreen from '../screens/TestScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,14 +29,20 @@ const ProfileNavigator = () => {
       // clearCart();
     };
   }, []);
-  
+
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="order"
+        name="profile"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
+
+      {/* <Stack.Screen
+        name="ordersd"
+        component={TestScreen}
+        options={{ headerShown: false }}
+      /> */}
     </Stack.Navigator>
   );
 };

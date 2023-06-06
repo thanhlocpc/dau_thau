@@ -27,7 +27,7 @@ import {
 // } from '../../../assets';
 // import { IconContainer, SafeAreaViewCustom } from '../../atoms';
 
-import Icon from '../icons/LightIcons';
+// import Icon from '../icons/LightIcons';
 const icon = ({ label, focus }) => {
 //   switch (label) {
 //     case 'Home':
@@ -41,7 +41,7 @@ const icon = ({ label, focus }) => {
 //     default:
 //       return <IconHomeRounded />;
 //   }
-    return  CartIcon = ({ color }) => <Icon name="cart-o" size={20} color={color} />;
+    // return  CartIcon = ({ color }) => <Icon name="cart-o" size={20} color={color} />;
 };
 
 const BottomNav = ({ state, descriptors, navigation }) => {

@@ -3,7 +3,7 @@ import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 
 import auth from '@react-native-firebase/auth';
-import { getUser, createUser, updateAddress, updateName, updateGender, updatePhone, updateBirthday,updateAvatar } from './services'
+import { getUser, createUser, updateAddress, updateName, updateGender, updatePhone, updateBirthday, updateAvatar, login, signup } from './services'
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,6 +12,7 @@ import { put, call, select, takeEvery } from 'redux-saga/effects';
 // import { showMessage } from 'react-native-flash-message';
 
 import * as Actions from './constants';
+import Global from '../../uitls/Global';
 
 // import NavigationService from 'src/utils/navigation';
 
@@ -20,9 +21,9 @@ export const saveUser = (user) => {
   AsyncStorage.setItem('@user', JSON.stringify(user))
 }
 
-export const getUserLocal =async () => {
+export const getUserLocal = async () => {
   const value = await AsyncStorage.getItem('@user')
-  if(value != null){
+  if (value != null) {
     return JSON.parse(value);
   }
   return null;
@@ -50,15 +51,29 @@ function* signInWithEmailSaga(action) {
     yield put({
       type: Actions.LOGIN_LOADING,
     })
-    const data = yield call([auth(), 'signInWithEmailAndPassword'], email, password)
-    // get user thật
-    const user = yield call(getUser, data.user.uid)
-    console.log(user);
-    yield put({
-      type: Actions.LOGIN_SUCESS,
-      payload: user._data
-    })
-    yield call(saveUser,user._data)
+    const data = yield call(login, email, password)
+    console.log(data);
+    if (data && data.status == 'ok') {
+      Global.setToken(data.data[0])
+      console.log(Global.getToken());
+      // get user thật
+      const user = yield call(getUser, email)
+      console.log(user);
+      if (user && user.status == 'ok') {
+      
+        yield put({
+          type: Actions.LOGIN_SUCESS,
+          payload: user?.data?.content[0]
+        })
+        yield call(saveUser, user?.data?.content[0])
+      }
+    } else {
+      yield put({
+        type: Actions.LOGIN_FAIL,
+        payload: data?.message ? data?.message : "Lỗi"
+      })
+      return;
+    }
   } catch (error) {
     if (error.code == 'auth/user-not-found') {
       yield put({
@@ -93,35 +108,41 @@ function* signInWithEmailSaga(action) {
 
 
 function* signUpWithEmailSaga(action) {
-  const { email, password, name } = action.payload
+  const { email, firstName, lastName, address, phoneNumber, password } = action.payload
   try {
     yield put({
       type: Actions.SIGNUP_LOADING,
     })
-    const data = yield call([auth(), 'createUserWithEmailAndPassword'], email, password)
-    // tạo user thật
+    const data = yield call(signup, email, firstName, lastName, address, phoneNumber, password)
     console.log(data);
-    const jsonUser = {
-      birthDay: "",
-      email,
-      gender: "",
-      id: data.user.uid,
-      name,
-      urlAvt: "https://vi-magento.com/wp-content/uploads/2020/09/ASSET-USER-ADMIN.png",
-      address: "",
-      role:0
+
+    if (data && data.status == 'ok') {
+      // get user thật
+      // const user = yield call(getUser, data.data[0])
+      // console.log(user);
+      yield put({
+        type: Actions.LOGIN_SUCESS,
+        payload: data.data
+      })
+      yield call(saveUser, data.data)
+    } else {
+      yield put({
+        type: Actions.SIGNUP_FAIL,
+        payload: data.message
+      })
+      return;
     }
 
-    yield call(createUser, data.user.uid, jsonUser)
+
     // get user thật
-    const user = yield call(getUser, data.user.uid)
+    // const user = yield call(getUser, data.user.uid)
     // console.log(user,'user');
 
-    yield put({
-      type: Actions.SIGNUP_SUCESS,
-      payload: user._data
-    })
-    yield call(saveUser,user._data)
+    // yield put({
+    //   type: Actions.SIGNUP_SUCESS,
+    //   payload: user._data
+    // })
+    // yield call(saveUser, user._data)
   } catch (error) {
     console.log(error);
     if (error.code == 'auth/email-already-in-use') {
@@ -148,20 +169,20 @@ function* signUpWithEmailSaga(action) {
   }
 }
 
-function* signInWithLocalSaga(){
+function* signInWithLocalSaga() {
   try {
     yield put({
       type: Actions.TRY_LOGIN_LOCAL_START
     })
     const data = yield call(getUserLocal)
-    if(data != null){
+    if (data != null) {
       yield put({
         type: Actions.LOGIN_SUCESS,
         payload: data
       })
     }
     console.log(data);
-    
+
   } catch (error) {
     console.log(error);
   }
@@ -171,8 +192,8 @@ function* signInWithLocalSaga(){
   })
 }
 
-function* logoutSaga(){
-  
+function* logoutSaga() {
+
   try {
     yield call(deleteUser)
     yield put({
@@ -184,95 +205,95 @@ function* logoutSaga(){
   }
 }
 
-function* getUserSaga(action){
-  const {payload} = action
-  
+function* getUserSaga(action) {
+  const { payload } = action
+
   try {
-     // get user thật
-     const user = yield call(getUser, payload)
-     yield put({
-       type: Actions.LOGIN_SUCESS,
-       payload: user._data
-     })
-     yield call(deleteUser)
-     yield call(saveUser,user._data)
+    // get user thật
+    const user = yield call(getUser, payload)
+    yield put({
+      type: Actions.LOGIN_SUCESS,
+      payload: user._data
+    })
+    yield call(deleteUser)
+    yield call(saveUser, user._data)
   } catch (error) {
     console.log(error);
   }
 }
 
-function* updateAddressSaga(action){
-  const {payload} = action
+function* updateAddressSaga(action) {
+  const { payload } = action
   try {
-     yield call(updateAddress, payload.uid, payload.address)
-     yield put({
-       type: Actions.GET_USER,
-       payload: payload.uid
-     })
+    yield call(updateAddress, payload.uid, payload.address)
+    yield put({
+      type: Actions.GET_USER,
+      payload: payload.uid
+    })
   } catch (error) {
     console.log(error);
   }
 }
 
-function* updateNameSaga(action){
-  const {payload} = action
+function* updateNameSaga(action) {
+  const { payload } = action
   try {
-     yield call(updateName, payload.uid, payload.name)
-     yield put({
-       type: Actions.GET_USER,
-       payload: payload.uid
-     })
+    yield call(updateName, payload.uid, payload.name)
+    yield put({
+      type: Actions.GET_USER,
+      payload: payload.uid
+    })
   } catch (error) {
     console.log(error);
   }
 }
 
-function* updatePhoneSaga(action){
-  const {payload} = action
+function* updatePhoneSaga(action) {
+  const { payload } = action
   try {
-     yield call(updatePhone, payload.uid, payload.phone)
-     yield put({
-       type: Actions.GET_USER,
-       payload: payload.uid
-     })
+    yield call(updatePhone, payload.uid, payload.phone)
+    yield put({
+      type: Actions.GET_USER,
+      payload: payload.uid
+    })
   } catch (error) {
     console.log(error);
   }
 }
 
-function* updateGenderSaga(action){
-  const {payload} = action
+function* updateGenderSaga(action) {
+  const { payload } = action
   try {
-     yield call(updateGender, payload.uid, payload.gender)
-     yield put({
-       type: Actions.GET_USER,
-       payload: payload.uid
-     })
+    yield call(updateGender, payload.uid, payload.gender)
+    yield put({
+      type: Actions.GET_USER,
+      payload: payload.uid
+    })
   } catch (error) {
     console.log(error);
   }
 }
-function* updateBirthdaySaga(action){
-  const {payload} = action
+function* updateBirthdaySaga(action) {
+  const { payload } = action
   try {
-     yield call(updateBirthday, payload.uid, payload.birthday)
-     yield put({
-       type: Actions.GET_USER,
-       payload: payload.uid
-     })
+    yield call(updateBirthday, payload.uid, payload.birthday)
+    yield put({
+      type: Actions.GET_USER,
+      payload: payload.uid
+    })
   } catch (error) {
     console.log(error);
   }
 }
-function* updateAvatarSaga(action){
-  const {payload} = action
+function* updateAvatarSaga(action) {
+  const { payload } = action
   console.log("doooo");
   try {
-     yield call(updateAvatar, payload.uid, payload.urlAvt)
-     yield put({
-       type: Actions.GET_USER,
-       payload: payload.uid
-     })
+    yield call(updateAvatar, payload.uid, payload.urlAvt)
+    yield put({
+      type: Actions.GET_USER,
+      payload: payload.uid
+    })
   } catch (error) {
     console.log(error);
   }

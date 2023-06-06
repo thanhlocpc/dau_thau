@@ -6,7 +6,6 @@ import { Colors } from '../../constants/Colors';
 import ErrorModal from './ErrorModal';
 import FormSubmitButton from './FormSubmitButton';
 import LabledInput from './LabledInput';
-import Icon from '../icons/LightIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from 'react-redux'
@@ -33,6 +32,14 @@ const passValidator = text => {
   }
   return { isValid: true };
 };
+const phoneValidator = text => {
+  const regex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+
+  if (!regex.test(String(text).toLocaleLowerCase())) {
+    return { isValid: false, error: 'Vui lòng nhập số điện thoại hợp lệ' };
+  }
+  return { isValid: true };
+};
 
 const nameValidator = text => {
   const regex = /^[a-z ,.'-]+$/i
@@ -48,11 +55,21 @@ const AuthForm = (props) => {
 
   const [email, setEmail] = useState("")
   const [passowrd, setPassword] = useState("")
-  const [name, setName] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [address, setAddress] = useState("")
+  const [phoneNumber, setPhone] = useState("")
+
+
 
   const [emailIsValid, setEmailIsValid] = useState(false)
   const [passwordIsValid, setPasswordIsValid] = useState(false)
-  const [nameIsValid, setNameIsValid] = useState(false)
+  const [firserNameIsValid, setFirstNameIsValid] = useState(false)
+  const [lastNameIsValid, setLastNameIsValid] = useState(false)
+  const [addressIsValid, setAddressIsValid] = useState(false)
+  const [phoneIsValid, setPhoneIsValid] = useState(false)
+
+
 
 
   const [alert, setAlert] = useState(false);
@@ -67,7 +84,7 @@ const AuthForm = (props) => {
     if (isLogin)
       onSubmit(email, passowrd)
     else
-      onSubmit(email, passowrd, name)
+      onSubmit(email, firstName, lastName, address, phoneNumber, passowrd )
   };
 
   useEffect(() => {
@@ -83,7 +100,7 @@ const AuthForm = (props) => {
       </View>
       <LabledInput
         required
-        placeholder="somebody@example.com"
+        placeholder="Email"
         Icon={({ color }) => (
           <MaterialCommunityIcons name="email" size={20} color={primaryColor} />
         )}
@@ -101,19 +118,36 @@ const AuthForm = (props) => {
         <>
           <LabledInput
             required
-            placeholder="Tên công ty"
+            placeholder="Tên"
             Icon={({ color }) => (
               <FontAwesome name="user" size={22} color={primaryColor} />
             )}
             borderRadius={140}
             autoCapitalize="none"
-            value={name}
-            isValid={nameIsValid}
+            value={firstName}
+            isValid={firserNameIsValid}
             validators={[nameValidator]}
             triggerValidation={triggerValidation}
             // error={state.email.error}
-            onChangeText={text => setName(text)}
-            setIsValid={setNameIsValid}
+            onChangeText={text => setFirstName(text)}
+            setIsValid={setFirstNameIsValid}
+          />
+
+          <LabledInput
+            required
+            placeholder="Họ"
+            Icon={({ color }) => (
+              <FontAwesome name="user" size={22} color={primaryColor} />
+            )}
+            borderRadius={140}
+            autoCapitalize="none"
+            value={lastName}
+            isValid={lastNameIsValid}
+            validators={[nameValidator]}
+            triggerValidation={triggerValidation}
+            // error={state.email.error}
+            onChangeText={text => setLastName(text)}
+            setIsValid={setLastNameIsValid}
           />
 
           <LabledInput
@@ -124,16 +158,16 @@ const AuthForm = (props) => {
             )}
             borderRadius={140}
             autoCapitalize="none"
-            value={name}
-            isValid={nameIsValid}
+            value={address}
+            isValid={addressIsValid}
             validators={[nameValidator]}
             triggerValidation={triggerValidation}
             // error={state.email.error}
-            onChangeText={text => setName(text)}
-            setIsValid={setNameIsValid}
+            onChangeText={text => setAddress(text)}
+            setIsValid={setAddressIsValid}
           />
 
-          <LabledInput
+          {/* <LabledInput
             required
             placeholder="Mã số thuế"
             Icon={({ color }) => (
@@ -148,7 +182,7 @@ const AuthForm = (props) => {
             // error={state.email.error}
             onChangeText={text => setName(text)}
             setIsValid={setNameIsValid}
-          />
+          /> */}
 
           <LabledInput
             required
@@ -158,13 +192,13 @@ const AuthForm = (props) => {
             )}
             borderRadius={140}
             autoCapitalize="none"
-            value={name}
-            isValid={nameIsValid}
-            validators={[nameValidator]}
+            value={phoneNumber}
+            isValid={phoneIsValid}
+            validators={[phoneValidator]}
             triggerValidation={triggerValidation}
             // error={state.email.error}
-            onChangeText={text => setName(text)}
-            setIsValid={setNameIsValid}
+            onChangeText={text => setPhone(text)}
+            setIsValid={setPhoneIsValid}
           />
         </>
       }
