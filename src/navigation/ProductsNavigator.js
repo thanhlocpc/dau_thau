@@ -6,6 +6,7 @@ import ProductsScreen from '../screens/ProductsScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import { Colors } from '../constants/Colors';
 import LeftIcon from '../components/icons/LeftIcon';
+import JoinTenderContractsScreen from '../screens/JoinTenderContractsScreen';
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,11 @@ const ProductsNavigator = () => {
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="JoinTenderContracts"
+        component={JoinTenderContractsScreen}
         options={{ headerShown: false }}
       />
 

@@ -1,4 +1,4 @@
-import React, {} from 'react';
+import React, { useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ import { connect, useDispatch } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { goBack } from '../uitls/naviation'
 import { formatDateFull } from '../uitls/dateUtils';
+import { useNavigation } from '@react-navigation/native';
 
 const snapValue = 24;
 
@@ -22,6 +23,14 @@ const ProductDetailScreen = (props) => {
   const { route } = props
   const { product } = route.params
   const dispatch = useDispatch();
+
+  const navigation = useNavigation();
+
+  const joinPress = useCallback(() => {
+    navigation.navigate("JoinTenderContracts", {
+      product,
+    });
+  }, [product]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -52,6 +61,9 @@ const ProductDetailScreen = (props) => {
                 <View style={{ flexDirection: 'row', marginBottom: 8, }}>
                   <View style={{ width: 15, backgroundColor: "#00C1FF", height: 30 }}></View>
                   {/* <Text style={styles.titleDebtInfo}>Chi tiết</Text> */}
+                  <TouchableOpacity onPress={joinPress}>
+                    <Text>Tham gia</Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Tên: </Text>
@@ -61,10 +73,10 @@ const ProductDetailScreen = (props) => {
                   <Text style={{ ...styles.text }}>Mô tả: </Text>
                   <Text style={{ ...styles.text }}>{product?.description}</Text>
                 </View >
-                <View style={styles.rowItem}>
+                {/* <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Bên mời thầu: </Text>
                   <Text style={{ ...styles.text }}>Vietcombank</Text>
-                </View >
+                </View > */}
                 <View style={styles.rowItem}>
                   <Text style={{ ...styles.text }}>Thông số kĩ thuật: </Text>
                   <Text style={{ ...styles.text }}>{product?.technicalInfo}</Text>
@@ -109,8 +121,6 @@ const ProductDetailScreen = (props) => {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
-    cart: state.cart,
-    favorite: state.favorite
   };
 };
 export default connect(mapStateToProps)(ProductDetailScreen);
@@ -176,7 +186,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontSize: 15  ,
+    fontSize: 15,
     color: 'black'
   },
   rowItem: {
